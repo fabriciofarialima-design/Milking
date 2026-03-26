@@ -37,7 +37,11 @@
           <img src="Logo-milking-liners.svg" alt="Milking Liners" class="h-11">
         </a>
         <span class="text-lg font-semibold tracking-wide">Orçamentos</span>
-        <button id="nav-cart-btn" onclick="showScreen('cart')" disabled class="relative flex items-center gap-2 px-3 py-2 rounded-lg transition-colors opacity-50 cursor-not-allowed" aria-label="Ver orçamento" title="Nenhum produto na lista de orçamento">
+        <button id="nav-cart-btn" onclick="showScreen('cart')" disabled class="group relative flex items-center gap-2 px-3 py-2 rounded-lg transition-colors opacity-50 cursor-not-allowed" aria-label="Ver orçamento">
+          <span id="nav-cart-tooltip" class="pointer-events-none absolute top-full right-0 mt-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-lg">
+            Nenhum produto na lista de orçamento
+            <span class="absolute -top-1 right-4 w-2 h-2 bg-gray-800 rotate-45"></span>
+          </span>
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
           <span class="text-sm font-medium hidden sm:inline">Meu orçamento</span>
           <span id="cart-badge" class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
@@ -936,7 +940,7 @@
         navBtn.disabled = false;
         navBtn.classList.remove('opacity-50', 'cursor-not-allowed');
         navBtn.classList.add('hover:bg-brand-600');
-        navBtn.title = '';
+        document.getElementById('nav-cart-tooltip').classList.add('hidden');
       } else {
         badge.classList.add('hidden');
         fab.classList.add('hidden');
@@ -944,7 +948,7 @@
         navBtn.disabled = true;
         navBtn.classList.add('opacity-50', 'cursor-not-allowed');
         navBtn.classList.remove('hover:bg-brand-600');
-        navBtn.title = 'Nenhum produto na lista de orçamento';
+        document.getElementById('nav-cart-tooltip').classList.remove('hidden');
       }
     }
 
