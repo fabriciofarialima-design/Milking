@@ -10,7 +10,7 @@
       theme: {
         extend: {
           colors: {
-            brand: { 50: '#f0fdf4', 100: '#dcfce7', 500: '#22c55e', 600: '#16a34a', 700: '#15803d', 800: '#166534' }
+            brand: { 50: '#e8f2fb', 100: '#c5dff3', 500: '#2a88cc', 600: '#0d71b9', 700: '#0a5e9a', 800: '#084a7a' }
           }
         }
       }
@@ -33,11 +33,13 @@
     <!-- ========== HEADER ========== -->
     <header class="bg-brand-700 text-white sticky top-0 z-50 shadow-md">
       <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <img src="Logo-milking-liners.svg" alt="Milking Liners" class="h-7 brightness-0 invert">
-        </div>
-        <button onclick="showScreen('cart')" class="relative p-2 rounded-full hover:bg-brand-600 transition-colors" aria-label="Ver orçamento">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        <a href="#" onclick="showScreen('catalog');return false;" class="flex items-center gap-3">
+          <img src="Logo-milking-liners.svg" alt="Milking Liners" class="h-11">
+        </a>
+        <span class="text-lg font-semibold tracking-wide">Orçamentos</span>
+        <button id="nav-cart-btn" onclick="showScreen('cart')" disabled class="relative flex items-center gap-2 px-3 py-2 rounded-lg transition-colors opacity-50 cursor-not-allowed" aria-label="Ver orçamento">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+          <span class="text-sm font-medium hidden sm:inline">Meu orçamento</span>
           <span id="cart-badge" class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
         </button>
       </div>
@@ -48,7 +50,7 @@
 
       <!-- Mensagem institucional -->
       <div class="bg-brand-50 border border-brand-100 rounded-lg p-3 mb-4 text-sm text-brand-800">
-        Monte sua lista de produtos e envie sua solicitação de orçamento. <strong>Nosso time comercial entrará em contato pelo WhatsApp para fechar o pedido com os melhores valores.</strong>
+        Monte sua lista de produtos e envie para cotação. <strong>Nosso time comercial entrará em contato pelo WhatsApp para fechar o pedido com os melhores valores.</strong>
       </div>
 
       <!-- Busca com autocomplete -->
@@ -72,22 +74,72 @@
         <div id="autocomplete-list" class="hidden absolute z-40 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg autocomplete-list"></div>
       </div>
 
-      <!-- Filtro por categoria -->
-      <div class="mb-4">
-        <select id="category-select" onchange="filterCategory(this.value)" class="w-full border border-gray-300 rounded-lg px-3 py-3 text-sm bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none">
-          <option value="todos">Todas as categorias (969 produtos)</option>
-        </select>
+      <!-- Filtro por categoria: MOBILE -->
+      <div class="mb-4 lg:hidden">
+        <button id="mobile-cat-toggle" onclick="toggleMobileCategories()" class="w-full flex items-center justify-between bg-white border border-gray-300 rounded-lg px-3 py-3 text-sm text-gray-700">
+          <span id="mobile-cat-label">Todas as categorias</span>
+          <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div id="mobile-cat-panel" class="hidden mt-1 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
+          <div class="p-2 border-b border-gray-200">
+            <div class="flex items-center bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
+              <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              <input
+                id="mobile-category-search"
+                type="text"
+                placeholder="Buscar categoria..."
+                class="w-full px-2 py-0 text-sm bg-transparent outline-none"
+                oninput="filterMobileCategoryList(this.value)"
+              >
+            </div>
+          </div>
+          <div id="mobile-category-list" class="overflow-y-auto max-h-64 p-1">
+            <!-- Renderizado via JS -->
+          </div>
+        </div>
       </div>
 
-      <!-- Grid de produtos -->
-      <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-        <!-- Renderizado via JS -->
-      </div>
+      <!-- Layout 2 colunas no desktop -->
+      <div class="lg:flex lg:gap-4">
 
-      <!-- Sem resultados -->
-      <div id="no-results" class="hidden text-center py-12 text-gray-500">
-        <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-        <p class="text-sm">Nenhum produto encontrado</p>
+        <!-- Sidebar categorias: DESKTOP -->
+        <aside id="category-sidebar" class="hidden lg:block lg:w-72 lg:shrink-0">
+          <div class="bg-white border border-gray-200 rounded-lg shadow-sm sticky top-16 max-h-[calc(100vh-5rem)] flex flex-col">
+            <div class="p-3 border-b border-gray-200">
+              <div class="flex items-center bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
+                <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <input
+                  id="category-search"
+                  type="text"
+                  placeholder="Filtrar categorias..."
+                  class="w-full px-2 py-0 text-sm bg-transparent outline-none"
+                  oninput="filterCategoryList(this.value)"
+                >
+              </div>
+            </div>
+            <div id="category-list" class="overflow-y-auto flex-1 p-1">
+              <!-- Renderizado via JS -->
+            </div>
+          </div>
+        </aside>
+
+        <!-- Coluna de produtos -->
+        <div class="flex-1 min-w-0">
+          <!-- Contador de resultados -->
+          <div id="results-count" class="text-xs text-gray-400 mb-2"></div>
+
+          <!-- Grid de produtos -->
+          <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-3">
+            <!-- Renderizado via JS -->
+          </div>
+
+          <!-- Sem resultados -->
+          <div id="no-results" class="hidden text-center py-12 text-gray-500">
+            <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <p class="text-sm">Nenhum produto encontrado</p>
+          </div>
+        </div>
+
       </div>
 
       <!-- FAB carrinho (mobile) -->
@@ -122,7 +174,10 @@
           <textarea id="cart-notes" rows="3" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none" placeholder="Ex: Preciso de entrega urgente, preço para pagamento à vista..."></textarea>
         </div>
         <button onclick="showScreen('form')" class="w-full bg-brand-600 text-white font-semibold py-3 rounded-lg hover:bg-brand-700 transition-colors">
-          Continuar para envio
+          Solicitar este orçamento
+        </button>
+        <button onclick="showScreen('catalog')" class="w-full mt-2 border-2 border-brand-600 text-brand-600 font-semibold py-3 rounded-lg hover:bg-brand-50 transition-colors">
+          Adicionar mais itens
         </button>
       </div>
     </main>
@@ -131,7 +186,7 @@
     <main id="screen-form" class="hidden max-w-5xl mx-auto px-4 py-4">
       <button onclick="showScreen('cart')" class="flex items-center gap-1 text-brand-700 text-sm font-medium mb-4 hover:underline">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-        Voltar à cesta
+        Adicionar mais produtos
       </button>
 
       <h2 class="text-xl font-bold text-gray-800 mb-4">Enviar Solicitação de Orçamento</h2>
@@ -142,7 +197,7 @@
 
       <form id="quote-form" onsubmit="submitQuote(event)" class="space-y-4 mb-6">
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Nome completo *</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Nome *</label>
           <input type="text" id="form-name" required class="w-full border border-gray-300 rounded-lg px-3 py-3 text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none" placeholder="Seu nome">
         </div>
         <div>
@@ -177,14 +232,55 @@
           <svg class="w-8 h-8 text-brand-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
         </div>
         <h2 class="text-xl font-bold text-gray-800 mb-2">Orçamento Enviado!</h2>
-        <p class="text-gray-600 text-sm mb-6">Nosso time comercial entrará em contato pelo <strong>WhatsApp</strong> informado para apresentar os valores e fechar o pedido.</p>
-        <button onclick="startNewQuote()" class="bg-brand-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-brand-700 transition-colors">
+        <p class="text-sm text-gray-500 mb-1">Seu código de orçamento:</p>
+        <p id="success-quote-code" class="text-2xl font-bold text-brand-600 mb-4 font-mono"></p>
+        <p class="text-gray-600 text-sm mb-6">Nosso time comercial entrará em contato para apresentar os valores e fechar o pedido. Você também pode falar diretamente com um vendedor:</p>
+        <a id="success-whatsapp-link" href="#" target="_blank" class="inline-flex items-center justify-center gap-2 bg-[#25D366] text-white font-semibold px-6 py-3 rounded-lg hover:bg-[#1da851] transition-colors w-full mb-3">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Falar com vendedor
+        </a>
+        <button onclick="startNewQuote()" class="text-brand-600 font-medium text-sm hover:underline">
           Fazer novo orçamento
         </button>
       </div>
     </main>
 
   </div>
+
+  <!-- ========== DRAWER CESTA: DESKTOP ========== -->
+  <div id="cart-drawer-overlay" class="hidden fixed inset-0 bg-black/30 z-50" onclick="closeCartDrawer()"></div>
+  <aside id="cart-drawer" class="fixed top-0 right-0 h-full w-96 bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out hidden flex-col">
+    <!-- Header -->
+    <div class="flex items-center justify-between px-4 py-4 border-b border-gray-200 bg-gray-50">
+      <h2 class="text-lg font-bold text-gray-800">Meu Orçamento</h2>
+      <button onclick="closeCartDrawer()" class="p-1 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-200 transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <!-- Conteúdo -->
+    <div class="flex-1 overflow-y-auto px-4 py-4">
+      <div id="drawer-cart-empty" class="hidden text-center py-8 text-gray-500">
+        <svg class="w-12 h-12 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        <p class="text-sm">Sua cesta está vazia</p>
+      </div>
+      <div id="drawer-cart-items" class="space-y-3">
+        <!-- Renderizado via JS -->
+      </div>
+    </div>
+    <!-- Footer -->
+    <div id="drawer-cart-footer" class="hidden border-t border-gray-200 px-4 py-4 bg-gray-50 space-y-3">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Observações (opcional)</label>
+        <textarea id="drawer-cart-notes" rows="2" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none" placeholder="Ex: Entrega urgente, pagamento à vista..."></textarea>
+      </div>
+      <button onclick="goToFormFromDrawer()" class="w-full bg-brand-600 text-white font-semibold py-3 rounded-lg hover:bg-brand-700 transition-colors">
+        Solicitar este orçamento
+      </button>
+      <button onclick="closeCartDrawer()" class="w-full border-2 border-brand-600 text-brand-600 font-semibold py-3 rounded-lg hover:bg-brand-50 transition-colors">
+        Adicionar mais itens
+      </button>
+    </div>
+  </aside>
 
   <!-- Dados dos produtos (arquivo separado) -->
   <script src="products.js"></script>
@@ -196,9 +292,17 @@
     // ==============================
     // CONFIGURAÇÃO
     // ==============================
-    const WEBHOOK_URL = ""; // Cole aqui a URL do webhook do N8N
+    const WEBHOOK_URL = "http://localhost:5678/webhook/milking-orcamento";
+    const WHATSAPP_NUMBER = "5534996359999";
     const COOKIE_NAME = "milking_cart";
     const COOKIE_DAYS = 30;
+
+    function generateQuoteCode() {
+      const now = new Date();
+      const date = now.toISOString().slice(2, 10).replace(/-/g, '');
+      const rand = Math.random().toString(36).substring(2, 6).toUpperCase();
+      return `ML-${date}-${rand}`;
+    }
 
     // ==============================
     // ESTADO
@@ -232,7 +336,20 @@
     // ==============================
     // NAVEGAÇÃO ENTRE TELAS
     // ==============================
+    function isDesktop() {
+      return window.innerWidth >= 1024;
+    }
+
     function showScreen(name) {
+      // Desktop: cesta abre no drawer, não muda tela
+      if (name === 'cart' && isDesktop()) {
+        openCartDrawer();
+        return;
+      }
+
+      // Fechar drawer se estiver aberto
+      closeCartDrawer();
+
       document.querySelectorAll('main[id^="screen-"]').forEach(el => el.classList.add('hidden'));
       document.getElementById(`screen-${name}`).classList.remove('hidden');
       window.scrollTo(0, 0);
@@ -245,6 +362,104 @@
     }
 
     // ==============================
+    // DRAWER DESKTOP
+    // ==============================
+    function openCartDrawer() {
+      const drawer = document.getElementById('cart-drawer');
+      const overlay = document.getElementById('cart-drawer-overlay');
+      drawer.classList.remove('hidden');
+      drawer.classList.add('flex');
+      overlay.classList.remove('hidden');
+      // Forçar reflow antes de animar
+      drawer.offsetHeight;
+      drawer.classList.remove('translate-x-full');
+      document.body.classList.add('overflow-hidden');
+      renderDrawerCart();
+    }
+
+    function closeCartDrawer() {
+      const drawer = document.getElementById('cart-drawer');
+      const overlay = document.getElementById('cart-drawer-overlay');
+      drawer.classList.add('translate-x-full');
+      document.body.classList.remove('overflow-hidden');
+      setTimeout(() => {
+        drawer.classList.add('hidden');
+        drawer.classList.remove('flex');
+        overlay.classList.add('hidden');
+      }, 300);
+    }
+
+    function goToFormFromDrawer() {
+      // Copiar observações do drawer para o form original
+      const drawerNotes = document.getElementById('drawer-cart-notes');
+      const cartNotes = document.getElementById('cart-notes');
+      if (drawerNotes && cartNotes) cartNotes.value = drawerNotes.value;
+      closeCartDrawer();
+      // Pequeno delay para fechar o drawer antes de mostrar o form
+      setTimeout(() => {
+        document.querySelectorAll('main[id^="screen-"]').forEach(el => el.classList.add('hidden'));
+        document.getElementById('screen-form').classList.remove('hidden');
+        window.scrollTo(0, 0);
+        renderFormSummary();
+      }, 150);
+    }
+
+    function renderDrawerCart() {
+      const container = document.getElementById('drawer-cart-items');
+      const emptyState = document.getElementById('drawer-cart-empty');
+      const footer = document.getElementById('drawer-cart-footer');
+
+      if (cart.length === 0) {
+        container.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        footer.classList.add('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      footer.classList.remove('hidden');
+
+      container.innerHTML = cart.map(item => `
+        <div class="bg-gray-50 rounded-lg p-3 flex items-center gap-3">
+          <div class="w-14 h-14 bg-white rounded-lg overflow-hidden shrink-0 flex items-center justify-center border border-gray-200">
+            <img src="https://pedidook.s3-sa-east-1.amazonaws.com/656/produto/foto_${item.id}.jpg" alt="${item.name}" class="w-full h-full object-contain" loading="lazy" onerror="this.onerror=null;this.parentElement.innerHTML='<svg class=\\'w-6 h-6 text-gray-300\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'1\\' viewBox=\\'0 0 24 24\\'><path stroke-linecap=\\'round\\' stroke-linejoin=\\'round\\' d=\\'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4\\'/></svg>'">
+          </div>
+          <div class="flex-1 min-w-0">
+            <h4 class="text-sm font-semibold text-gray-800 truncate">${item.name}</h4>
+            <p class="text-xs text-gray-400">Cód. ${item.code} | Emb.: ${item.package}</p>
+          </div>
+          <div class="flex items-center gap-1 shrink-0">
+            <button onclick="updateQtyDrawer('${item.code}', -1)" class="w-7 h-7 flex items-center justify-center border border-gray-300 rounded text-gray-600 hover:bg-white font-bold text-sm">-</button>
+            <span class="w-7 text-center text-sm font-semibold">${item.qty}</span>
+            <button onclick="updateQtyDrawer('${item.code}', 1)" class="w-7 h-7 flex items-center justify-center border border-gray-300 rounded text-gray-600 hover:bg-white font-bold text-sm">+</button>
+          </div>
+          <button onclick="removeFromDrawer('${item.code}')" class="text-red-400 hover:text-red-600 p-1" title="Remover">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function updateQtyDrawer(code, delta) {
+      const item = cart.find(c => c.code === code);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) {
+        cart = cart.filter(c => c.code !== code);
+      }
+      saveCart();
+      renderDrawerCart();
+      renderProducts();
+    }
+
+    function removeFromDrawer(code) {
+      cart = cart.filter(c => c.code !== code);
+      saveCart();
+      renderDrawerCart();
+      renderProducts();
+    }
+
+    // ==============================
     // CATÁLOGO: RENDERIZAÇÃO
     // ==============================
     function getCategories() {
@@ -254,20 +469,105 @@
     const PAGE_SIZE = 30;
     let currentPage = 1;
 
-    function renderCategorySelect() {
-      const select = document.getElementById('category-select');
+    let categorySearchTerm = '';
+    let mobileCategorySearchTerm = '';
+
+    function getCategoriesWithCount() {
       const cats = getCategories().sort();
-      select.innerHTML = `<option value="todos">Todas as categorias (${PRODUCTS.length} produtos)</option>`;
-      cats.forEach(cat => {
-        const count = PRODUCTS.filter(p => p.category === cat).length;
-        select.innerHTML += `<option value="${cat}">${cat} (${count})</option>`;
+      return cats.map(cat => ({
+        name: cat,
+        count: PRODUCTS.filter(p => p.category === cat).length
+      }));
+    }
+
+    function renderCategorySelect() {
+      renderCategoryList();
+      renderMobileCategoryList();
+      updateMobileCatLabel();
+    }
+
+    // ---- Desktop sidebar ----
+    function renderCategoryList() {
+      const container = document.getElementById('category-list');
+      if (!container) return;
+      renderCategoryButtons(container, categorySearchTerm);
+    }
+
+    function filterCategoryList(value) {
+      categorySearchTerm = value;
+      renderCategoryList();
+    }
+
+    // ---- Mobile panel ----
+    function toggleMobileCategories() {
+      const panel = document.getElementById('mobile-cat-panel');
+      panel.classList.toggle('hidden');
+      if (!panel.classList.contains('hidden')) {
+        document.getElementById('mobile-category-search').focus();
+      }
+    }
+
+    function renderMobileCategoryList() {
+      const container = document.getElementById('mobile-category-list');
+      if (!container) return;
+      renderCategoryButtons(container, mobileCategorySearchTerm, true);
+    }
+
+    function filterMobileCategoryList(value) {
+      mobileCategorySearchTerm = value;
+      renderMobileCategoryList();
+    }
+
+    function updateMobileCatLabel() {
+      const label = document.getElementById('mobile-cat-label');
+      if (!label) return;
+      if (currentCategory === 'todos') {
+        label.textContent = 'Todas as categorias';
+      } else {
+        label.textContent = currentCategory;
+      }
+    }
+
+    // ---- Renderização compartilhada ----
+    function renderCategoryButtons(container, searchTerm, isMobile) {
+      const cats = getCategoriesWithCount();
+      const term = (searchTerm || '').toLowerCase();
+      const filtered = term ? cats.filter(c => c.name.toLowerCase().includes(term)) : cats;
+
+      let html = `<button onclick="filterCategory('todos')" class="w-full text-left px-3 py-2 rounded-lg text-sm flex justify-between items-center transition-colors ${currentCategory === 'todos' ? 'bg-brand-600 text-white font-semibold' : 'text-gray-700 hover:bg-gray-100'}">
+        <span>Todas as categorias</span><span class="${currentCategory === 'todos' ? 'text-brand-100' : 'text-gray-400'} text-xs">${PRODUCTS.length}</span>
+      </button>`;
+
+      filtered.forEach(c => {
+        const active = currentCategory === c.name;
+        const escaped = c.name.replace(/'/g, "\\'");
+        html += `<button onclick="filterCategory('${escaped}')" class="w-full text-left px-3 py-2 rounded-lg text-sm flex justify-between items-center transition-colors ${active ? 'bg-brand-600 text-white font-semibold' : 'text-gray-700 hover:bg-gray-100'}">
+          <span class="truncate mr-2">${c.name}</span><span class="${active ? 'text-brand-100' : 'text-gray-400'} text-xs shrink-0">${c.count}</span>
+        </button>`;
       });
-      select.value = currentCategory;
+
+      if (filtered.length === 0) {
+        html = '<p class="text-xs text-gray-400 text-center py-4">Nenhuma categoria encontrada</p>';
+      }
+
+      container.innerHTML = html;
     }
 
     function filterCategory(cat) {
       currentCategory = cat;
       currentPage = 1;
+
+      // Fechar painel mobile
+      const panel = document.getElementById('mobile-cat-panel');
+      if (panel) panel.classList.add('hidden');
+
+      // Atualizar label mobile
+      updateMobileCatLabel();
+
+      // Re-render ambas listas (atualizar item ativo)
+      renderCategoryList();
+      renderMobileCategoryList();
+
       renderProducts();
     }
 
@@ -296,14 +596,19 @@
       const allProducts = getFilteredProducts();
       const noResults = document.getElementById('no-results');
 
+      const countEl = document.getElementById('results-count');
+
       if (allProducts.length === 0) {
         grid.innerHTML = '';
         noResults.classList.remove('hidden');
+        countEl.textContent = '';
         removePagination();
         return;
       }
 
       noResults.classList.add('hidden');
+      const catLabel = currentCategory === 'todos' ? 'todas as categorias' : currentCategory;
+      countEl.textContent = `${allProducts.length} produto${allProducts.length !== 1 ? 's' : ''} em ${catLabel}`;
 
       const totalPages = Math.ceil(allProducts.length / PAGE_SIZE);
       const products = allProducts.slice(0, currentPage * PAGE_SIZE);
@@ -312,6 +617,13 @@
         const inCart = cart.find(c => c.code === p.code);
         return `
           <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden flex flex-col">
+            <div class="bg-gray-100 aspect-square flex items-center justify-center overflow-hidden">
+              <img src="https://pedidook.s3-sa-east-1.amazonaws.com/656/produto/foto_${p.id}.jpg"
+                   alt="${p.name}"
+                   class="w-full h-full object-contain"
+                   loading="lazy"
+                   onerror="this.onerror=null;this.parentElement.innerHTML='<svg class=\\'w-12 h-12 text-gray-300\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'1\\' viewBox=\\'0 0 24 24\\'><path stroke-linecap=\\'round\\' stroke-linejoin=\\'round\\' d=\\'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4\\'/></svg>'">
+            </div>
             <div class="p-3 flex flex-col flex-1">
               <span class="text-xs text-gray-400 mb-1">Cód. ${p.code}${p.reference ? ' | Ref. ' + p.reference : ''}</span>
               <h3 class="text-sm font-semibold text-gray-800 leading-tight mb-1">${p.name}</h3>
@@ -430,10 +742,14 @@
       renderProducts();
     }
 
-    // Fechar autocomplete ao clicar fora
+    // Fechar dropdowns ao clicar fora
     document.addEventListener('click', (e) => {
       if (!e.target.closest('#search-input') && !e.target.closest('#autocomplete-list')) {
         document.getElementById('autocomplete-list').classList.add('hidden');
+      }
+      if (!e.target.closest('#mobile-cat-toggle') && !e.target.closest('#mobile-cat-panel')) {
+        const panel = document.getElementById('mobile-cat-panel');
+        if (panel) panel.classList.add('hidden');
       }
     });
 
@@ -449,6 +765,7 @@
         existing.qty++;
       } else {
         cart.push({
+          id: product.id,
           code: product.code,
           name: product.name,
           package: product.package,
@@ -458,6 +775,9 @@
       }
       saveCart();
       renderProducts();
+
+      // Desktop: abrir drawer ao adicionar item
+      if (isDesktop()) openCartDrawer();
     }
 
     function updateQty(code, delta) {
@@ -483,6 +803,7 @@
       const badge = document.getElementById('cart-badge');
       const fabBadge = document.getElementById('fab-badge');
       const fab = document.getElementById('fab-cart');
+      const navBtn = document.getElementById('nav-cart-btn');
 
       if (count > 0) {
         badge.textContent = count;
@@ -490,10 +811,16 @@
         fabBadge.textContent = count;
         fab.classList.remove('hidden');
         fab.classList.add('flex');
+        navBtn.disabled = false;
+        navBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        navBtn.classList.add('hover:bg-brand-600');
       } else {
         badge.classList.add('hidden');
         fab.classList.add('hidden');
         fab.classList.remove('flex');
+        navBtn.disabled = true;
+        navBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        navBtn.classList.remove('hover:bg-brand-600');
       }
     }
 
@@ -514,6 +841,9 @@
 
       container.innerHTML = cart.map(item => `
         <div class="bg-white rounded-lg border border-gray-200 p-4 flex items-center gap-3">
+          <div class="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden shrink-0 flex items-center justify-center border border-gray-200">
+            <img src="https://pedidook.s3-sa-east-1.amazonaws.com/656/produto/foto_${item.id}.jpg" alt="${item.name}" class="w-full h-full object-contain" loading="lazy" onerror="this.onerror=null;this.parentElement.innerHTML='<svg class=\\'w-7 h-7 text-gray-300\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'1\\' viewBox=\\'0 0 24 24\\'><path stroke-linecap=\\'round\\' stroke-linejoin=\\'round\\' d=\\'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4\\'/></svg>'">
+          </div>
           <div class="flex-1 min-w-0">
             <h4 class="text-sm font-semibold text-gray-800 truncate">${item.name}</h4>
             <p class="text-xs text-gray-400">Cód. ${item.code}${item.reference ? ' | Ref. ' + item.reference : ''} | Emb.: ${item.package}</p>
@@ -550,7 +880,13 @@
       const notes = document.getElementById('cart-notes')?.value || '';
 
       container.innerHTML = cart.map(item =>
-        `<div class="flex justify-between"><span>${item.qty}x ${item.name}</span><span class="text-gray-400 shrink-0 ml-2">${item.package}</span></div>`
+        `<div class="flex items-center gap-3 py-1">
+          <img src="https://pedidook.s3-sa-east-1.amazonaws.com/656/produto/foto_${item.id}.jpg" alt="${item.name}" class="w-10 h-10 object-cover rounded border border-gray-200 shrink-0">
+          <div class="flex justify-between flex-1 min-w-0">
+            <span class="truncate">${item.qty}x ${item.name}</span>
+            <span class="text-gray-400 shrink-0 ml-2">${item.package}</span>
+          </div>
+        </div>`
       ).join('');
 
       if (notes.trim()) {
@@ -583,7 +919,10 @@
         return;
       }
 
+      const quoteCode = generateQuoteCode();
+
       const payload = {
+        quoteCode,
         timestamp: new Date().toISOString(),
         customer: {
           name,
@@ -614,7 +953,6 @@
           await fetch(WEBHOOK_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            mode: "no-cors",
             body: JSON.stringify(payload)
           });
         } else {
@@ -631,6 +969,11 @@
 
       // Limpar formulário
       document.getElementById('quote-form').reset();
+
+      // Configurar tela de sucesso
+      document.getElementById('success-quote-code').textContent = quoteCode;
+      const whatsappMsg = encodeURIComponent(`Olá, quero dar andamento no orçamento número ${quoteCode}.`);
+      document.getElementById('success-whatsapp-link').href = `https://wa.me/${WHATSAPP_NUMBER}?text=${whatsappMsg}`;
 
       // Mostrar sucesso
       btn.disabled = false;
