@@ -701,12 +701,15 @@
 
       const term = value.toLowerCase();
       const matches = PRODUCTS.filter(p => matchesSearch(p, term)).sort((a, b) => {
-        const aExact = a.code === value;
-        const bExact = b.code === value;
+        const aCode = a.code.toString();
+        const bCode = b.code.toString();
+        const aExact = aCode === value;
+        const bExact = bCode === value;
         if (aExact !== bExact) return aExact ? -1 : 1;
-        const aStarts = a.code.toString().startsWith(value);
-        const bStarts = b.code.toString().startsWith(value);
+        const aStarts = aCode.startsWith(value);
+        const bStarts = bCode.startsWith(value);
         if (aStarts !== bStarts) return aStarts ? -1 : 1;
+        if (aStarts && bStarts) return aCode.length - bCode.length || aCode.localeCompare(bCode);
         return 0;
       }).slice(0, 8);
 
