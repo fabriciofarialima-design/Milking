@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Milking Distribuidora — Solicite seu Orçamento</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#f0fdf4', 100: '#dcfce7', 500: '#22c55e', 600: '#16a34a', 700: '#15803d', 800: '#166534' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    [x-cloak] { display: none !important; }
+    .fade-in { animation: fadeIn 0.2s ease-in; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .autocomplete-list { max-height: 240px; overflow-y: auto; }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+  <!-- ============================================ -->
+  <!-- APP ROOT -->
+  <!-- ============================================ -->
+  <div id="app">
+
+    <!-- ========== HEADER ========== -->
+    <header class="bg-brand-700 text-white sticky top-0 z-50 shadow-md">
+      <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <img src="Logo-milking-liners.svg" alt="Milking Liners" class="h-7 brightness-0 invert">
+        </div>
+        <button onclick="showScreen('cart')" class="relative p-2 rounded-full hover:bg-brand-600 transition-colors" aria-label="Ver orçamento">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+          <span id="cart-badge" class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ========== TELA 1: CATÁLOGO ========== -->
+    <main id="screen-catalog" class="max-w-5xl mx-auto px-4 py-4">
+
+      <!-- Mensagem institucional -->
+      <div class="bg-brand-50 border border-brand-100 rounded-lg p-3 mb-4 text-sm text-brand-800">
+        Monte sua lista de produtos e envie sua solicitação de orçamento. <strong>Nosso time comercial entrará em contato pelo WhatsApp para fechar o pedido com os melhores valores.</strong>
+      </div>
+
+      <!-- Busca com autocomplete -->
+      <div class="relative mb-4">
+        <div class="flex items-center bg-white border border-gray-300 rounded-lg shadow-sm focus-within:ring-2 focus-within:ring-brand-500 focus-within:border-brand-500">
+          <svg class="w-5 h-5 text-gray-400 ml-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input
+            id="search-input"
+            type="text"
+            placeholder="Buscar produto por nome, código ou apelido..."
+            class="w-full px-3 py-3 text-sm bg-transparent outline-none"
+            autocomplete="off"
+            oninput="onSearchInput(this.value)"
+            onfocus="onSearchInput(this.value)"
+          >
+          <button id="search-clear" class="hidden px-3 text-gray-400 hover:text-gray-600" onclick="clearSearch()">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <!-- Autocomplete dropdown -->
+        <div id="autocomplete-list" class="hidden absolute z-40 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg autocomplete-list"></div>
+      </div>
+
+      <!-- Filtro por categoria -->
+      <div class="mb-4">
+        <select id="category-select" onchange="filterCategory(this.value)" class="w-full border border-gray-300 rounded-lg px-3 py-3 text-sm bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none">
+          <option value="todos">Todas as categorias (969 produtos)</option>
+        </select>
+      </div>
+
+      <!-- Grid de produtos -->
+      <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+        <!-- Renderizado via JS -->
+      </div>
+
+      <!-- Sem resultados -->
+      <div id="no-results" class="hidden text-center py-12 text-gray-500">
+        <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <p class="text-sm">Nenhum produto encontrado</p>
+      </div>
+
+      <!-- FAB carrinho (mobile) -->
+      <button id="fab-cart" onclick="showScreen('cart')" class="hidden fixed bottom-6 right-6 bg-brand-600 text-white rounded-full w-14 h-14 shadow-lg flex items-center justify-center hover:bg-brand-700 transition-colors z-40 md:hidden">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        <span id="fab-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
+      </button>
+    </main>
+
+    <!-- ========== TELA 2: CESTA DE ORÇAMENTO ========== -->
+    <main id="screen-cart" class="hidden max-w-5xl mx-auto px-4 py-4">
+      <button onclick="showScreen('catalog')" class="flex items-center gap-1 text-brand-700 text-sm font-medium mb-4 hover:underline">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        Voltar ao catálogo
+      </button>
+
+      <h2 class="text-xl font-bold text-gray-800 mb-4">Cesta de Orçamento</h2>
+
+      <div id="cart-empty" class="hidden text-center py-12 text-gray-500">
+        <svg class="w-16 h-16 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        <p class="text-sm mb-2">Sua cesta está vazia</p>
+        <button onclick="showScreen('catalog')" class="text-brand-600 font-medium text-sm hover:underline">Adicionar produtos</button>
+      </div>
+
+      <div id="cart-items" class="space-y-3 mb-4">
+        <!-- Renderizado via JS -->
+      </div>
+
+      <div id="cart-footer" class="hidden">
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-1">Observações (opcional)</label>
+          <textarea id="cart-notes" rows="3" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none" placeholder="Ex: Preciso de entrega urgente, preço para pagamento à vista..."></textarea>
+        </div>
+        <button onclick="showScreen('form')" class="w-full bg-brand-600 text-white font-semibold py-3 rounded-lg hover:bg-brand-700 transition-colors">
+          Continuar para envio
+        </button>
+      </div>
+    </main>
+
+    <!-- ========== TELA 3: FORMULÁRIO DE ENVIO ========== -->
+    <main id="screen-form" class="hidden max-w-5xl mx-auto px-4 py-4">
+      <button onclick="showScreen('cart')" class="flex items-center gap-1 text-brand-700 text-sm font-medium mb-4 hover:underline">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        Voltar à cesta
+      </button>
+
+      <h2 class="text-xl font-bold text-gray-800 mb-4">Enviar Solicitação de Orçamento</h2>
+
+      <div class="bg-brand-50 border border-brand-100 rounded-lg p-3 mb-4 text-sm text-brand-800">
+        Nosso time comercial entrará em contato pelo <strong>WhatsApp</strong> informado abaixo para fechar o pedido com os valores.
+      </div>
+
+      <form id="quote-form" onsubmit="submitQuote(event)" class="space-y-4 mb-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Nome completo *</label>
+          <input type="text" id="form-name" required class="w-full border border-gray-300 rounded-lg px-3 py-3 text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none" placeholder="Seu nome">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">WhatsApp *</label>
+          <input type="tel" id="form-whatsapp" required class="w-full border border-gray-300 rounded-lg px-3 py-3 text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none" placeholder="(00) 00000-0000" oninput="maskWhatsApp(this)">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Nome da Revenda *</label>
+          <input type="text" id="form-store" required class="w-full border border-gray-300 rounded-lg px-3 py-3 text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none" placeholder="Nome da sua loja ou fazenda">
+        </div>
+
+        <!-- Resumo do pedido -->
+        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+          <h3 class="text-sm font-semibold text-gray-700 mb-2">Resumo do orçamento</h3>
+          <div id="form-summary" class="space-y-1 text-sm text-gray-600">
+            <!-- Renderizado via JS -->
+          </div>
+          <div id="form-notes-display" class="hidden mt-2 pt-2 border-t border-gray-200 text-sm text-gray-500 italic"></div>
+        </div>
+
+        <button type="submit" id="submit-btn" class="w-full bg-brand-600 text-white font-semibold py-3 rounded-lg hover:bg-brand-700 transition-colors flex items-center justify-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+          Enviar Solicitação de Orçamento
+        </button>
+      </form>
+    </main>
+
+    <!-- ========== TELA 4: SUCESSO ========== -->
+    <main id="screen-success" class="hidden max-w-5xl mx-auto px-4 py-12 text-center fade-in">
+      <div class="bg-white rounded-2xl shadow-lg p-8 max-w-md mx-auto">
+        <div class="w-16 h-16 bg-brand-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-brand-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <h2 class="text-xl font-bold text-gray-800 mb-2">Orçamento Enviado!</h2>
+        <p class="text-gray-600 text-sm mb-6">Nosso time comercial entrará em contato pelo <strong>WhatsApp</strong> informado para apresentar os valores e fechar o pedido.</p>
+        <button onclick="startNewQuote()" class="bg-brand-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-brand-700 transition-colors">
+          Fazer novo orçamento
+        </button>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Dados dos produtos (arquivo separado) -->
+  <script src="products.js"></script>
+
+  <!-- ============================================ -->
+  <!-- JAVASCRIPT -->
+  <!-- ============================================ -->
+  <script>
+    // ==============================
+    // CONFIGURAÇÃO
+    // ==============================
+    const WEBHOOK_URL = ""; // Cole aqui a URL do webhook do N8N
+    const COOKIE_NAME = "milking_cart";
+    const COOKIE_DAYS = 30;
+
+    // ==============================
+    // ESTADO
+    // ==============================
+    let cart = loadCart();
+    let currentCategory = "todos";
+    let searchTerm = "";
+
+    // ==============================
+    // COOKIES (persistência do carrinho)
+    // ==============================
+    function saveCart() {
+      const expires = new Date(Date.now() + COOKIE_DAYS * 864e5).toUTCString();
+      const value = encodeURIComponent(JSON.stringify(cart));
+      document.cookie = `${COOKIE_NAME}=${value}; expires=${expires}; path=/; SameSite=Lax`;
+      updateCartUI();
+    }
+
+    function loadCart() {
+      const match = document.cookie.match(new RegExp(`(?:^|; )${COOKIE_NAME}=([^;]*)`));
+      if (match) {
+        try { return JSON.parse(decodeURIComponent(match[1])); } catch(e) {}
+      }
+      return [];
+    }
+
+    function clearCartCookie() {
+      document.cookie = `${COOKIE_NAME}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax`;
+    }
+
+    // ==============================
+    // NAVEGAÇÃO ENTRE TELAS
+    // ==============================
+    function showScreen(name) {
+      document.querySelectorAll('main[id^="screen-"]').forEach(el => el.classList.add('hidden'));
+      document.getElementById(`screen-${name}`).classList.remove('hidden');
+      window.scrollTo(0, 0);
+
+      // Fechar autocomplete ao trocar tela
+      document.getElementById('autocomplete-list').classList.add('hidden');
+
+      if (name === 'cart') renderCart();
+      if (name === 'form') renderFormSummary();
+    }
+
+    // ==============================
+    // CATÁLOGO: RENDERIZAÇÃO
+    // ==============================
+    function getCategories() {
+      return [...new Set(PRODUCTS.map(p => p.category))];
+    }
+
+    const PAGE_SIZE = 30;
+    let currentPage = 1;
+
+    function renderCategorySelect() {
+      const select = document.getElementById('category-select');
+      const cats = getCategories().sort();
+      select.innerHTML = `<option value="todos">Todas as categorias (${PRODUCTS.length} produtos)</option>`;
+      cats.forEach(cat => {
+        const count = PRODUCTS.filter(p => p.category === cat).length;
+        select.innerHTML += `<option value="${cat}">${cat} (${count})</option>`;
+      });
+      select.value = currentCategory;
+    }
+
+    function filterCategory(cat) {
+      currentCategory = cat;
+      currentPage = 1;
+      renderProducts();
+    }
+
+    function matchesSearch(product, term) {
+      if (!term) return true;
+      const t = term.toLowerCase();
+      return (
+        product.name.toLowerCase().includes(t) ||
+        product.code.toString().includes(t) ||
+        (product.reference || '').toLowerCase().includes(t) ||
+        product.brand.toLowerCase().includes(t) ||
+        (product.aliases || []).some(a => a.toLowerCase().includes(t))
+      );
+    }
+
+    function getFilteredProducts() {
+      return PRODUCTS.filter(p => {
+        const catMatch = currentCategory === 'todos' || p.category === currentCategory;
+        const searchMatch = matchesSearch(p, searchTerm);
+        return catMatch && searchMatch;
+      });
+    }
+
+    function renderProducts() {
+      const grid = document.getElementById('product-grid');
+      const allProducts = getFilteredProducts();
+      const noResults = document.getElementById('no-results');
+
+      if (allProducts.length === 0) {
+        grid.innerHTML = '';
+        noResults.classList.remove('hidden');
+        removePagination();
+        return;
+      }
+
+      noResults.classList.add('hidden');
+
+      const totalPages = Math.ceil(allProducts.length / PAGE_SIZE);
+      const products = allProducts.slice(0, currentPage * PAGE_SIZE);
+
+      grid.innerHTML = products.map(p => {
+        const inCart = cart.find(c => c.code === p.code);
+        return `
+          <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden flex flex-col">
+            <div class="p-3 flex flex-col flex-1">
+              <span class="text-xs text-gray-400 mb-1">Cód. ${p.code}${p.reference ? ' | Ref. ' + p.reference : ''}</span>
+              <h3 class="text-sm font-semibold text-gray-800 leading-tight mb-1">${p.name}</h3>
+              <span class="text-xs text-gray-500 mb-1">${p.brand}</span>
+              <span class="text-xs text-gray-500 mb-3">Emb.: ${p.package}</span>
+              <div class="mt-auto">
+                ${inCart
+                  ? `<div class="flex items-center justify-between bg-brand-50 rounded-lg px-2 py-1">
+                      <button onclick="updateQty('${p.code}', -1)" class="w-8 h-8 flex items-center justify-center text-brand-700 font-bold text-lg rounded hover:bg-brand-100">-</button>
+                      <span class="text-sm font-semibold text-brand-800">${inCart.qty}</span>
+                      <button onclick="updateQty('${p.code}', 1)" class="w-8 h-8 flex items-center justify-center text-brand-700 font-bold text-lg rounded hover:bg-brand-100">+</button>
+                    </div>`
+                  : `<button onclick="addToCart('${p.code}')" class="w-full bg-brand-600 text-white text-sm font-medium py-2 rounded-lg hover:bg-brand-700 transition-colors">Adicionar</button>`
+                }
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Pagination: "Carregar mais" button
+      renderPagination(allProducts.length, products.length, totalPages);
+    }
+
+    function renderPagination(total, shown, totalPages) {
+      removePagination();
+      if (currentPage >= totalPages) return;
+
+      const grid = document.getElementById('product-grid');
+      const btn = document.createElement('div');
+      btn.id = 'load-more';
+      btn.className = 'col-span-full text-center py-4';
+      btn.innerHTML = `
+        <button onclick="loadMore()" class="text-brand-600 font-medium text-sm hover:underline px-6 py-2 border border-brand-600 rounded-lg hover:bg-brand-50 transition-colors">
+          Carregar mais produtos (${shown} de ${total})
+        </button>
+      `;
+      grid.parentNode.insertBefore(btn, grid.nextSibling);
+    }
+
+    function removePagination() {
+      const el = document.getElementById('load-more');
+      if (el) el.remove();
+    }
+
+    function loadMore() {
+      currentPage++;
+      renderProducts();
+    }
+
+    // ==============================
+    // BUSCA COM AUTOCOMPLETE
+    // ==============================
+    function onSearchInput(value) {
+      const list = document.getElementById('autocomplete-list');
+      const clearBtn = document.getElementById('search-clear');
+
+      clearBtn.classList.toggle('hidden', !value);
+
+      if (!value || value.length < 2) {
+        list.classList.add('hidden');
+        searchTerm = value;
+        currentPage = 1;
+        renderProducts();
+        return;
+      }
+
+      const term = value.toLowerCase();
+      const matches = PRODUCTS.filter(p => matchesSearch(p, term)).slice(0, 8);
+
+      if (matches.length === 0) {
+        list.classList.add('hidden');
+        searchTerm = value;
+        currentPage = 1;
+        renderProducts();
+        return;
+      }
+
+      list.innerHTML = matches.map(p => {
+        // Encontrar qual apelido deu match, se houver
+        const aliasMatch = (p.aliases || []).find(a => a.toLowerCase().includes(term));
+        const aliasText = aliasMatch ? `<span class="text-xs text-gray-400 ml-1">— "${aliasMatch}"</span>` : '';
+
+        return `
+          <button onclick="selectProduct('${p.code}')" class="w-full text-left px-4 py-3 hover:bg-gray-50 border-b border-gray-100 last:border-0 flex items-center gap-3">
+            <div class="flex-1 min-w-0">
+              <div class="text-sm font-medium text-gray-800 truncate">${p.name}${aliasText}</div>
+              <div class="text-xs text-gray-400">Cód. ${p.code} | ${p.category}</div>
+            </div>
+            <svg class="w-4 h-4 text-gray-300 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        `;
+      }).join('');
+
+      list.classList.remove('hidden');
+
+      searchTerm = value;
+      renderProducts();
+    }
+
+    function selectProduct(code) {
+      const product = PRODUCTS.find(p => p.code === code);
+      if (product) {
+        document.getElementById('search-input').value = product.name;
+        searchTerm = product.name;
+        document.getElementById('autocomplete-list').classList.add('hidden');
+        renderProducts();
+      }
+    }
+
+    function clearSearch() {
+      document.getElementById('search-input').value = '';
+      searchTerm = '';
+      document.getElementById('search-clear').classList.add('hidden');
+      document.getElementById('autocomplete-list').classList.add('hidden');
+      renderProducts();
+    }
+
+    // Fechar autocomplete ao clicar fora
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#search-input') && !e.target.closest('#autocomplete-list')) {
+        document.getElementById('autocomplete-list').classList.add('hidden');
+      }
+    });
+
+    // ==============================
+    // CARRINHO
+    // ==============================
+    function addToCart(code) {
+      const product = PRODUCTS.find(p => p.code === code);
+      if (!product) return;
+
+      const existing = cart.find(c => c.code === code);
+      if (existing) {
+        existing.qty++;
+      } else {
+        cart.push({
+          code: product.code,
+          name: product.name,
+          package: product.package,
+          reference: product.reference,
+          qty: 1
+        });
+      }
+      saveCart();
+      renderProducts();
+    }
+
+    function updateQty(code, delta) {
+      const item = cart.find(c => c.code === code);
+      if (!item) return;
+
+      item.qty += delta;
+      if (item.qty <= 0) {
+        cart = cart.filter(c => c.code !== code);
+      }
+      saveCart();
+      renderProducts();
+    }
+
+    function removeFromCart(code) {
+      cart = cart.filter(c => c.code !== code);
+      saveCart();
+      renderCart();
+    }
+
+    function updateCartUI() {
+      const count = cart.reduce((sum, item) => sum + item.qty, 0);
+      const badge = document.getElementById('cart-badge');
+      const fabBadge = document.getElementById('fab-badge');
+      const fab = document.getElementById('fab-cart');
+
+      if (count > 0) {
+        badge.textContent = count;
+        badge.classList.remove('hidden');
+        fabBadge.textContent = count;
+        fab.classList.remove('hidden');
+        fab.classList.add('flex');
+      } else {
+        badge.classList.add('hidden');
+        fab.classList.add('hidden');
+        fab.classList.remove('flex');
+      }
+    }
+
+    function renderCart() {
+      const container = document.getElementById('cart-items');
+      const emptyState = document.getElementById('cart-empty');
+      const footer = document.getElementById('cart-footer');
+
+      if (cart.length === 0) {
+        container.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        footer.classList.add('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      footer.classList.remove('hidden');
+
+      container.innerHTML = cart.map(item => `
+        <div class="bg-white rounded-lg border border-gray-200 p-4 flex items-center gap-3">
+          <div class="flex-1 min-w-0">
+            <h4 class="text-sm font-semibold text-gray-800 truncate">${item.name}</h4>
+            <p class="text-xs text-gray-400">Cód. ${item.code}${item.reference ? ' | Ref. ' + item.reference : ''} | Emb.: ${item.package}</p>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <button onclick="updateQtyCart('${item.code}', -1)" class="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 font-bold">-</button>
+            <span class="w-8 text-center text-sm font-semibold">${item.qty}</span>
+            <button onclick="updateQtyCart('${item.code}', 1)" class="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 font-bold">+</button>
+          </div>
+          <button onclick="removeFromCart('${item.code}')" class="text-red-400 hover:text-red-600 p-1" title="Remover">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function updateQtyCart(code, delta) {
+      const item = cart.find(c => c.code === code);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) {
+        cart = cart.filter(c => c.code !== code);
+      }
+      saveCart();
+      renderCart();
+    }
+
+    // ==============================
+    // FORMULÁRIO E ENVIO
+    // ==============================
+    function renderFormSummary() {
+      const container = document.getElementById('form-summary');
+      const notesDisplay = document.getElementById('form-notes-display');
+      const notes = document.getElementById('cart-notes')?.value || '';
+
+      container.innerHTML = cart.map(item =>
+        `<div class="flex justify-between"><span>${item.qty}x ${item.name}</span><span class="text-gray-400 shrink-0 ml-2">${item.package}</span></div>`
+      ).join('');
+
+      if (notes.trim()) {
+        notesDisplay.textContent = notes;
+        notesDisplay.classList.remove('hidden');
+      } else {
+        notesDisplay.classList.add('hidden');
+      }
+    }
+
+    function maskWhatsApp(input) {
+      let v = input.value.replace(/\D/g, '');
+      if (v.length > 11) v = v.slice(0, 11);
+      if (v.length > 7) v = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+      else if (v.length > 2) v = `(${v.slice(0,2)}) ${v.slice(2)}`;
+      else if (v.length > 0) v = `(${v}`;
+      input.value = v;
+    }
+
+    async function submitQuote(event) {
+      event.preventDefault();
+
+      const name = document.getElementById('form-name').value.trim();
+      const whatsapp = document.getElementById('form-whatsapp').value.replace(/\D/g, '');
+      const store = document.getElementById('form-store').value.trim();
+      const notes = document.getElementById('cart-notes')?.value?.trim() || '';
+
+      if (!name || !whatsapp || whatsapp.length < 10 || !store) {
+        alert('Preencha todos os campos obrigatórios.');
+        return;
+      }
+
+      const payload = {
+        timestamp: new Date().toISOString(),
+        customer: {
+          name,
+          whatsapp: `55${whatsapp}`,
+          store
+        },
+        items: cart.map(item => ({
+          code: item.code,
+          name: item.name,
+          qty: item.qty,
+          package: item.package,
+          reference: item.reference
+        })),
+        notes,
+        itemCount: cart.reduce((sum, item) => sum + item.qty, 0),
+        source: "website"
+      };
+
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.innerHTML = `<svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg> Enviando...`;
+
+      // Log no console para testes
+      console.log("📦 Payload do orçamento:", JSON.stringify(payload, null, 2));
+
+      try {
+        if (WEBHOOK_URL) {
+          await fetch(WEBHOOK_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            mode: "no-cors",
+            body: JSON.stringify(payload)
+          });
+        } else {
+          console.warn("⚠️ WEBHOOK_URL não configurada. Configure no topo do arquivo index.html.");
+        }
+      } catch (err) {
+        console.error("Erro ao enviar webhook:", err);
+      }
+
+      // Limpar carrinho
+      cart = [];
+      clearCartCookie();
+      updateCartUI();
+
+      // Limpar formulário
+      document.getElementById('quote-form').reset();
+
+      // Mostrar sucesso
+      btn.disabled = false;
+      btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg> Enviar Solicitação de Orçamento`;
+      showScreen('success');
+    }
+
+    function startNewQuote() {
+      showScreen('catalog');
+    }
+
+    // ==============================
+    // INICIALIZAÇÃO
+    // ==============================
+    function init() {
+      renderCategorySelect();
+      renderProducts();
+      updateCartUI();
+    }
+
+    init();
+  </script>
+
+</body>
+</html>
