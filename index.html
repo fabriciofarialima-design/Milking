@@ -690,7 +690,8 @@
 
       clearBtn.classList.toggle('hidden', !value);
 
-      if (!value || value.length < 2) {
+      const minLen = /^\d+$/.test(value) ? 1 : 2;
+      if (!value || value.length < minLen) {
         list.classList.add('hidden');
         searchTerm = value;
         currentPage = 1;
