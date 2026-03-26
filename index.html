@@ -99,26 +99,56 @@
         </div>
       </div>
 
+      <!-- Filtro por marca: MOBILE -->
+      <div class="mb-4 lg:hidden">
+        <button id="mobile-brand-toggle" onclick="toggleMobileBrands()" class="w-full flex items-center justify-between bg-white border border-gray-300 rounded-lg px-3 py-3 text-sm text-gray-700">
+          <span id="mobile-brand-label">Todas as marcas</span>
+          <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div id="mobile-brand-panel" class="hidden mt-1 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
+          <div class="p-2 border-b border-gray-200">
+            <div class="flex items-center bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
+              <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              <input
+                id="mobile-brand-search"
+                type="text"
+                placeholder="Buscar marca..."
+                class="w-full px-2 py-0 text-sm bg-transparent outline-none"
+                oninput="filterMobileBrandList(this.value)"
+              >
+            </div>
+          </div>
+          <div id="mobile-brand-list" class="overflow-y-auto max-h-64 p-1">
+          </div>
+        </div>
+      </div>
+
       <!-- Layout 2 colunas no desktop -->
       <div class="lg:flex lg:gap-4">
 
-        <!-- Sidebar categorias: DESKTOP -->
+        <!-- Sidebar categorias/marcas: DESKTOP -->
         <aside id="category-sidebar" class="hidden lg:block lg:w-72 lg:shrink-0">
           <div class="bg-white border border-gray-200 rounded-lg shadow-sm sticky top-16 max-h-[calc(100vh-5rem)] flex flex-col">
+            <!-- Tabs -->
+            <div class="flex border-b border-gray-200">
+              <button id="tab-categories" onclick="switchSidebarTab('categories')" class="flex-1 px-3 py-2.5 text-sm font-semibold text-brand-600 border-b-2 border-brand-600">Categorias</button>
+              <button id="tab-brands" onclick="switchSidebarTab('brands')" class="flex-1 px-3 py-2.5 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700">Marcas</button>
+            </div>
+            <!-- Busca -->
             <div class="p-3 border-b border-gray-200">
               <div class="flex items-center bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
                 <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                 <input
-                  id="category-search"
+                  id="sidebar-search"
                   type="text"
                   placeholder="Filtrar categorias..."
                   class="w-full px-2 py-0 text-sm bg-transparent outline-none"
-                  oninput="filterCategoryList(this.value)"
+                  oninput="filterSidebarList(this.value)"
                 >
               </div>
             </div>
-            <div id="category-list" class="overflow-y-auto flex-1 p-1">
-              <!-- Renderizado via JS -->
+            <!-- Lista -->
+            <div id="sidebar-list" class="overflow-y-auto flex-1 p-1">
             </div>
           </div>
         </aside>
@@ -309,6 +339,8 @@
     // ==============================
     let cart = loadCart();
     let currentCategory = "todos";
+    let currentBrand = "todos";
+    let sidebarTab = "categories";
     let searchTerm = "";
 
     // ==============================
@@ -469,8 +501,9 @@
     const PAGE_SIZE = 30;
     let currentPage = 1;
 
-    let categorySearchTerm = '';
+    let sidebarSearchTerm = '';
     let mobileCategorySearchTerm = '';
+    let mobileBrandSearchTerm = '';
 
     function getCategoriesWithCount() {
       const cats = getCategories().sort();
@@ -480,25 +513,52 @@
       }));
     }
 
+    function getBrandsWithCount() {
+      const brands = [...new Set(PRODUCTS.map(p => p.brand || '(sem marca)'))].sort();
+      return brands.map(b => ({
+        name: b,
+        count: PRODUCTS.filter(p => (p.brand || '(sem marca)') === b).length
+      }));
+    }
+
     function renderCategorySelect() {
-      renderCategoryList();
+      renderSidebarList();
       renderMobileCategoryList();
+      renderMobileBrandList();
       updateMobileCatLabel();
+      updateMobileBrandLabel();
     }
 
-    // ---- Desktop sidebar ----
-    function renderCategoryList() {
-      const container = document.getElementById('category-list');
+    // ---- Desktop sidebar (tabs) ----
+    function switchSidebarTab(tab) {
+      sidebarTab = tab;
+      sidebarSearchTerm = '';
+      const searchInput = document.getElementById('sidebar-search');
+      if (searchInput) {
+        searchInput.value = '';
+        searchInput.placeholder = tab === 'categories' ? 'Filtrar categorias...' : 'Filtrar marcas...';
+      }
+      document.getElementById('tab-categories').className = `flex-1 px-3 py-2.5 text-sm border-b-2 ${tab === 'categories' ? 'font-semibold text-brand-600 border-brand-600' : 'font-medium text-gray-500 border-transparent hover:text-gray-700'}`;
+      document.getElementById('tab-brands').className = `flex-1 px-3 py-2.5 text-sm border-b-2 ${tab === 'brands' ? 'font-semibold text-brand-600 border-brand-600' : 'font-medium text-gray-500 border-transparent hover:text-gray-700'}`;
+      renderSidebarList();
+    }
+
+    function renderSidebarList() {
+      const container = document.getElementById('sidebar-list');
       if (!container) return;
-      renderCategoryButtons(container, categorySearchTerm);
+      if (sidebarTab === 'categories') {
+        renderFilterButtons(container, getCategoriesWithCount(), currentCategory, 'filterCategory', 'Todas as categorias', sidebarSearchTerm);
+      } else {
+        renderFilterButtons(container, getBrandsWithCount(), currentBrand, 'filterBrand', 'Todas as marcas', sidebarSearchTerm);
+      }
     }
 
-    function filterCategoryList(value) {
-      categorySearchTerm = value;
-      renderCategoryList();
+    function filterSidebarList(value) {
+      sidebarSearchTerm = value;
+      renderSidebarList();
     }
 
-    // ---- Mobile panel ----
+    // ---- Mobile: Categorias ----
     function toggleMobileCategories() {
       const panel = document.getElementById('mobile-cat-panel');
       panel.classList.toggle('hidden');
@@ -510,7 +570,7 @@
     function renderMobileCategoryList() {
       const container = document.getElementById('mobile-category-list');
       if (!container) return;
-      renderCategoryButtons(container, mobileCategorySearchTerm, true);
+      renderFilterButtons(container, getCategoriesWithCount(), currentCategory, 'filterCategory', 'Todas as categorias', mobileCategorySearchTerm);
     }
 
     function filterMobileCategoryList(value) {
@@ -521,33 +581,55 @@
     function updateMobileCatLabel() {
       const label = document.getElementById('mobile-cat-label');
       if (!label) return;
-      if (currentCategory === 'todos') {
-        label.textContent = 'Todas as categorias';
-      } else {
-        label.textContent = currentCategory;
+      label.textContent = currentCategory === 'todos' ? 'Todas as categorias' : currentCategory;
+    }
+
+    // ---- Mobile: Marcas ----
+    function toggleMobileBrands() {
+      const panel = document.getElementById('mobile-brand-panel');
+      panel.classList.toggle('hidden');
+      if (!panel.classList.contains('hidden')) {
+        document.getElementById('mobile-brand-search').focus();
       }
     }
 
-    // ---- Renderização compartilhada ----
-    function renderCategoryButtons(container, searchTerm, isMobile) {
-      const cats = getCategoriesWithCount();
-      const term = (searchTerm || '').toLowerCase();
-      const filtered = term ? cats.filter(c => c.name.toLowerCase().includes(term)) : cats;
+    function renderMobileBrandList() {
+      const container = document.getElementById('mobile-brand-list');
+      if (!container) return;
+      renderFilterButtons(container, getBrandsWithCount(), currentBrand, 'filterBrand', 'Todas as marcas', mobileBrandSearchTerm);
+    }
 
-      let html = `<button onclick="filterCategory('todos')" class="w-full text-left px-3 py-2 rounded-lg text-sm flex justify-between items-center transition-colors ${currentCategory === 'todos' ? 'bg-brand-600 text-white font-semibold' : 'text-gray-700 hover:bg-gray-100'}">
-        <span>Todas as categorias</span><span class="${currentCategory === 'todos' ? 'text-brand-100' : 'text-gray-400'} text-xs">${PRODUCTS.length}</span>
+    function filterMobileBrandList(value) {
+      mobileBrandSearchTerm = value;
+      renderMobileBrandList();
+    }
+
+    function updateMobileBrandLabel() {
+      const label = document.getElementById('mobile-brand-label');
+      if (!label) return;
+      label.textContent = currentBrand === 'todos' ? 'Todas as marcas' : currentBrand;
+    }
+
+    // ---- Renderização compartilhada ----
+    function renderFilterButtons(container, items, current, fnName, allLabel, searchTerm) {
+      const term = (searchTerm || '').toLowerCase();
+      const filtered = term ? items.filter(c => c.name.toLowerCase().includes(term)) : items;
+      const total = PRODUCTS.length;
+
+      let html = `<button onclick="${fnName}('todos')" class="w-full text-left px-3 py-2 rounded-lg text-sm flex justify-between items-center transition-colors ${current === 'todos' ? 'bg-brand-600 text-white font-semibold' : 'text-gray-700 hover:bg-gray-100'}">
+        <span>${allLabel}</span><span class="${current === 'todos' ? 'text-brand-100' : 'text-gray-400'} text-xs">${total}</span>
       </button>`;
 
       filtered.forEach(c => {
-        const active = currentCategory === c.name;
+        const active = current === c.name;
         const escaped = c.name.replace(/'/g, "\\'");
-        html += `<button onclick="filterCategory('${escaped}')" class="w-full text-left px-3 py-2 rounded-lg text-sm flex justify-between items-center transition-colors ${active ? 'bg-brand-600 text-white font-semibold' : 'text-gray-700 hover:bg-gray-100'}">
+        html += `<button onclick="${fnName}('${escaped}')" class="w-full text-left px-3 py-2 rounded-lg text-sm flex justify-between items-center transition-colors ${active ? 'bg-brand-600 text-white font-semibold' : 'text-gray-700 hover:bg-gray-100'}">
           <span class="truncate mr-2">${c.name}</span><span class="${active ? 'text-brand-100' : 'text-gray-400'} text-xs shrink-0">${c.count}</span>
         </button>`;
       });
 
       if (filtered.length === 0) {
-        html = '<p class="text-xs text-gray-400 text-center py-4">Nenhuma categoria encontrada</p>';
+        html = '<p class="text-xs text-gray-400 text-center py-4">Nenhum resultado encontrado</p>';
       }
 
       container.innerHTML = html;
@@ -556,18 +638,20 @@
     function filterCategory(cat) {
       currentCategory = cat;
       currentPage = 1;
-
-      // Fechar painel mobile
-      const panel = document.getElementById('mobile-cat-panel');
-      if (panel) panel.classList.add('hidden');
-
-      // Atualizar label mobile
+      document.getElementById('mobile-cat-panel')?.classList.add('hidden');
       updateMobileCatLabel();
-
-      // Re-render ambas listas (atualizar item ativo)
-      renderCategoryList();
+      renderSidebarList();
       renderMobileCategoryList();
+      renderProducts();
+    }
 
+    function filterBrand(brand) {
+      currentBrand = brand;
+      currentPage = 1;
+      document.getElementById('mobile-brand-panel')?.classList.add('hidden');
+      updateMobileBrandLabel();
+      renderSidebarList();
+      renderMobileBrandList();
       renderProducts();
     }
 
@@ -593,8 +677,9 @@
     function getFilteredProducts() {
       return PRODUCTS.filter(p => {
         const catMatch = currentCategory === 'todos' || p.category === currentCategory;
+        const brandMatch = currentBrand === 'todos' || (p.brand || '(sem marca)') === currentBrand;
         const searchMatch = matchesSearch(p, searchTerm);
-        return catMatch && searchMatch;
+        return catMatch && brandMatch && searchMatch;
       });
     }
 
@@ -614,8 +699,11 @@
       }
 
       noResults.classList.add('hidden');
-      const catLabel = currentCategory === 'todos' ? 'todas as categorias' : currentCategory;
-      countEl.textContent = `${allProducts.length} produto${allProducts.length !== 1 ? 's' : ''} em ${catLabel}`;
+      let filterLabel = '';
+      if (currentCategory !== 'todos') filterLabel += currentCategory;
+      if (currentBrand !== 'todos') filterLabel += (filterLabel ? ' / ' : '') + currentBrand;
+      if (!filterLabel) filterLabel = 'todas as categorias';
+      countEl.textContent = `${allProducts.length} produto${allProducts.length !== 1 ? 's' : ''} em ${filterLabel}`;
 
       const totalPages = Math.ceil(allProducts.length / PAGE_SIZE);
       const products = allProducts.slice(0, currentPage * PAGE_SIZE);
@@ -768,6 +856,10 @@
       }
       if (!e.target.closest('#mobile-cat-toggle') && !e.target.closest('#mobile-cat-panel')) {
         const panel = document.getElementById('mobile-cat-panel');
+        if (panel) panel.classList.add('hidden');
+      }
+      if (!e.target.closest('#mobile-brand-toggle') && !e.target.closest('#mobile-brand-panel')) {
+        const panel = document.getElementById('mobile-brand-panel');
         if (panel) panel.classList.add('hidden');
       }
     });
