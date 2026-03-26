@@ -700,7 +700,15 @@
       }
 
       const term = value.toLowerCase();
-      const matches = PRODUCTS.filter(p => matchesSearch(p, term)).slice(0, 8);
+      const matches = PRODUCTS.filter(p => matchesSearch(p, term)).sort((a, b) => {
+        const aExact = a.code === value;
+        const bExact = b.code === value;
+        if (aExact !== bExact) return aExact ? -1 : 1;
+        const aStarts = a.code.toString().startsWith(value);
+        const bStarts = b.code.toString().startsWith(value);
+        if (aStarts !== bStarts) return aStarts ? -1 : 1;
+        return 0;
+      }).slice(0, 8);
 
       if (matches.length === 0) {
         list.classList.add('hidden');
