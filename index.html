@@ -10,7 +10,7 @@
       theme: {
         extend: {
           colors: {
-            brand: { 50: '#e8f2fb', 100: '#c5dff3', 500: '#2a88cc', 600: '#0d71b9', 700: '#0a5e9a', 800: '#084a7a' }
+            brand: { 50: '#e8f2fb', 100: '#c5dff3', 500: '#2a88cc', 600: '#0d71b9', 700: '#0a5e9a', 800: '#084a7a', 900: '#042438' }
           }
         }
       }
@@ -21,7 +21,8 @@
     .fade-in { animation: fadeIn 0.2s ease-in; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     .autocomplete-list { max-height: 240px; overflow-y: auto; }
-    button, a, select, [onclick] { cursor: pointer !important; }
+    button, a, select, input[type="radio"], [onclick] { cursor: pointer !important; }
+    button:disabled { cursor: not-allowed !important; }
   </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
@@ -32,10 +33,10 @@
   <div id="app">
 
     <!-- ========== HEADER ========== -->
-    <header class="bg-brand-700 text-white sticky top-0 z-50 shadow-md">
+    <header class="bg-brand-900 text-white sticky top-0 z-50 shadow-md">
       <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
         <a href="#" onclick="showScreen('catalog');return false;" class="flex items-center gap-3">
-          <img src="Logo-milking-liners.svg" alt="Milking Liners" class="h-11">
+          <img src="Logo-milking-liners.svg" alt="Milking Liners" class="h-[2.34rem]">
         </a>
         <span class="text-sm font-semibold tracking-wide">Orçamentos</span>
         <button id="nav-cart-btn" onclick="showScreen('cart')" disabled class="group relative flex items-center gap-2 px-3 py-2 rounded-lg transition-colors opacity-50 cursor-not-allowed" aria-label="Ver orçamento">
