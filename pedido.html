@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pedido — Milking Distribuidora</title>
+  <meta property="og:title" content="Pedido de Orçamento — Milking Distribuidora">
+  <meta property="og:description" content="Visualize os itens do pedido de orçamento — Milking Distribuidora">
+  <meta property="og:type" content="website">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#e8f2fb', 100: '#c5dff3', 500: '#2a88cc', 600: '#0d71b9', 700: '#0a5e9a', 800: '#084a7a', 900: '#063b5b' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .fade-in { animation: fadeIn 0.2s ease-in; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    button, a { cursor: pointer !important; }
+    @media print {
+      .no-print { display: none !important; }
+      header { background: white !important; box-shadow: none !important; border-bottom: 1px solid #e5e7eb; }
+      header * { color: #063b5b !important; }
+      body { background: white !important; }
+      .print-full { max-width: 100% !important; box-shadow: none !important; }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+  <!-- HEADER -->
+  <header class="bg-brand-900 text-white shadow-md">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-3">
+        <img src="Logo-milking-liners.svg" alt="Milking Liners" class="h-[2.34rem]">
+      </a>
+      <a href="index.html" class="text-sm text-brand-100 hover:text-white transition-colors no-print">Novo Orçamento</a>
+    </div>
+  </header>
+
+  <!-- CONTEÚDO -->
+  <main id="order-content" class="hidden max-w-4xl mx-auto px-4 py-8 fade-in">
+    <div class="bg-white rounded-2xl shadow-lg p-6 sm:p-8 print-full">
+
+      <!-- Código do pedido -->
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div>
+          <p class="text-sm text-gray-500 mb-1">Pedido de Orçamento</p>
+          <h1 id="quote-code" class="text-2xl font-bold text-brand-600 font-mono"></h1>
+          <p id="quote-date" class="text-xs text-gray-400 mt-1"></p>
+        </div>
+        <div class="flex gap-2 no-print">
+          <button onclick="copyLink()" class="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium px-4 py-2 rounded-lg transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+            <span id="copy-btn-text">Copiar Link</span>
+          </button>
+          <button onclick="shareOrder()" id="share-btn" class="hidden items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+            Compartilhar
+          </button>
+        </div>
+      </div>
+
+      <!-- Info do cliente -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 p-4 bg-gray-50 rounded-xl">
+        <div>
+          <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Cliente</p>
+          <p id="customer-name" class="text-sm font-semibold text-gray-800"></p>
+        </div>
+        <div>
+          <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">WhatsApp</p>
+          <p id="customer-whatsapp" class="text-sm text-gray-700"></p>
+        </div>
+        <div>
+          <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Loja / Fazenda</p>
+          <p id="customer-store" class="text-sm text-gray-700"></p>
+        </div>
+      </div>
+
+      <!-- Tabela (desktop) -->
+      <div class="hidden sm:block overflow-x-auto mb-4">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b-2 border-brand-100 text-left">
+              <th class="py-3 px-3 text-gray-500 font-semibold w-16"></th>
+              <th class="py-3 px-3 text-gray-500 font-semibold w-20">Cód.</th>
+              <th class="py-3 px-3 text-gray-500 font-semibold">Produto</th>
+              <th class="py-3 px-3 text-gray-500 font-semibold w-32">Embalagem</th>
+              <th class="py-3 px-3 text-gray-500 font-semibold text-center w-16">Qtd</th>
+            </tr>
+          </thead>
+          <tbody id="items-table"></tbody>
+        </table>
+      </div>
+
+      <!-- Cards (mobile) -->
+      <div id="items-cards" class="sm:hidden space-y-3 mb-4"></div>
+
+      <!-- Total -->
+      <div class="flex justify-end pt-4 border-t border-gray-200">
+        <p class="text-sm text-gray-600">Total: <span id="total-items" class="font-bold text-brand-600"></span> itens</p>
+      </div>
+
+    </div>
+
+    <!-- Botão de impressão -->
+    <div class="text-center mt-6 no-print">
+      <button onclick="window.print()" class="inline-flex items-center gap-2 text-gray-500 hover:text-gray-700 text-sm transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+        Imprimir
+      </button>
+    </div>
+  </main>
+
+  <!-- ESTADO DE ERRO -->
+  <main id="error-content" class="hidden max-w-md mx-auto px-4 py-16 text-center fade-in">
+    <div class="bg-white rounded-2xl shadow-lg p-8">
+      <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg class="w-8 h-8 text-red-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
+      </div>
+      <h2 class="text-lg font-bold text-gray-800 mb-2">Link inválido</h2>
+      <p class="text-gray-500 text-sm mb-6">Este link de pedido não é válido ou está incompleto.</p>
+      <a href="index.html" class="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors">
+        Ir para o catálogo
+      </a>
+    </div>
+  </main>
+
+  <!-- Dados dos produtos -->
+  <script src="products.js"></script>
+
+  <script>
+    function parseHash() {
+      const hash = window.location.hash.substring(1);
+      if (!hash) return null;
+
+      const parts = hash.split('|');
+      if (parts.length < 6) return null;
+
+      const quoteCode = parts[0];
+      const customerName = decodeURIComponent(parts[1]);
+      const whatsapp = parts[2];
+      const store = decodeURIComponent(parts[3]);
+      const timestamp = parts[4];
+      const itemsRaw = parts.slice(5).join('|');
+
+      const items = itemsRaw.split(',').map(pair => {
+        const [code, qty] = pair.split(':');
+        if (!code || !qty) return null;
+        const product = PRODUCTS.find(p => p.code === code);
+        return {
+          code,
+          qty: parseInt(qty, 10),
+          name: product ? product.name : 'Produto não encontrado',
+          package: product ? product.package : '—',
+          imageId: product ? product.id : null
+        };
+      }).filter(Boolean);
+
+      if (items.length === 0) return null;
+
+      return { quoteCode, customerName, whatsapp, store, timestamp, items };
+    }
+
+    function formatWhatsApp(number) {
+      // 5534999999999 → (34) 99999-9999
+      if (number.length === 13) {
+        return `(${number.slice(2, 4)}) ${number.slice(4, 9)}-${number.slice(9)}`;
+      }
+      return number;
+    }
+
+    function render(data) {
+      document.title = `Pedido ${data.quoteCode} — Milking Distribuidora`;
+
+      document.getElementById('quote-code').textContent = data.quoteCode;
+
+      // Formatar data/hora
+      if (data.timestamp) {
+        const d = new Date(data.timestamp);
+        const dateStr = d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        const timeStr = d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('quote-date').textContent = `${dateStr} às ${timeStr}`;
+      }
+
+      document.getElementById('customer-name').textContent = data.customerName;
+      document.getElementById('customer-whatsapp').textContent = formatWhatsApp(data.whatsapp);
+      document.getElementById('customer-store').textContent = data.store;
+
+      // Tabela desktop
+      const tbody = document.getElementById('items-table');
+      const imgBase = 'https://pedidook.s3-sa-east-1.amazonaws.com/656/produto/foto_';
+      const imgFallback = `onerror="this.onerror=null;this.parentElement.innerHTML='<svg class=\\'w-6 h-6 text-gray-300\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'1\\' viewBox=\\'0 0 24 24\\'><path stroke-linecap=\\'round\\' stroke-linejoin=\\'round\\' d=\\'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4\\'/></svg>'"`;
+
+      tbody.innerHTML = data.items.map((item, i) =>
+        `<tr class="${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}">
+          <td class="py-2 px-3"><div class="w-12 h-12 rounded border border-gray-200 flex items-center justify-center overflow-hidden bg-white">${item.imageId ? `<img src="${imgBase}${item.imageId}.jpg" alt="" class="w-full h-full object-contain" loading="lazy" ${imgFallback}>` : '<svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>'}</div></td>
+          <td class="py-2.5 px-3 font-mono text-brand-700 font-semibold">${item.code}</td>
+          <td class="py-2.5 px-3 text-gray-800">${item.name}</td>
+          <td class="py-2.5 px-3 text-gray-500">${item.package}</td>
+          <td class="py-2.5 px-3 text-center font-semibold">${item.qty}</td>
+        </tr>`
+      ).join('');
+
+      // Cards mobile
+      const cards = document.getElementById('items-cards');
+      cards.innerHTML = data.items.map(item =>
+        `<div class="bg-gray-50 rounded-xl p-4 flex gap-3">
+          <div class="w-14 h-14 rounded border border-gray-200 flex items-center justify-center overflow-hidden bg-white shrink-0">${item.imageId ? `<img src="${imgBase}${item.imageId}.jpg" alt="" class="w-full h-full object-contain" loading="lazy" ${imgFallback}>` : '<svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>'}</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-start justify-between mb-1">
+              <span class="text-xs font-mono text-brand-600 font-semibold bg-brand-50 px-2 py-0.5 rounded">Cód. ${item.code}</span>
+              <span class="text-sm font-bold text-gray-800">${item.qty}x</span>
+            </div>
+            <p class="text-sm text-gray-800 font-medium mt-1">${item.name}</p>
+            <p class="text-xs text-gray-400 mt-1">${item.package}</p>
+          </div>
+        </div>`
+      ).join('');
+
+      // Total
+      const totalQty = data.items.reduce((sum, item) => sum + item.qty, 0);
+      document.getElementById('total-items').textContent = totalQty;
+
+      // Mostrar botão compartilhar se disponível
+      if (navigator.share) {
+        document.getElementById('share-btn').classList.remove('hidden');
+        document.getElementById('share-btn').classList.add('inline-flex');
+      }
+
+      document.getElementById('order-content').classList.remove('hidden');
+    }
+
+    function copyLink() {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        const btn = document.getElementById('copy-btn-text');
+        btn.textContent = 'Copiado!';
+        setTimeout(() => { btn.textContent = 'Copiar Link'; }, 2000);
+      });
+    }
+
+    function shareOrder() {
+      const data = parseHash();
+      if (!data) return;
+      navigator.share({
+        title: `Pedido ${data.quoteCode} — Milking`,
+        text: `Pedido de orçamento ${data.quoteCode} — ${data.items.length} itens`,
+        url: window.location.href
+      }).catch(() => {});
+    }
+
+    // Init
+    document.addEventListener('DOMContentLoaded', () => {
+      const data = parseHash();
+      if (data) {
+        render(data);
+      } else {
+        document.getElementById('error-content').classList.remove('hidden');
+      }
+    });
+  </script>
+
+</body>
+</html>
