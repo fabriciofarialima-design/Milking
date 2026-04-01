@@ -252,8 +252,13 @@
               <span class="text-sm text-gray-700">Produtor Rural</span>
             </label>
           </div>
-          <label id="form-store-label" class="block text-sm font-medium text-gray-700 mb-1">Nome da Revenda *</label>
-          <input type="text" id="form-store" required class="w-full border border-gray-300 rounded-lg px-3 py-3 text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none" placeholder="Nome da sua revenda">
+          <div id="produtor-warning" class="hidden bg-amber-50 border border-amber-300 rounded-lg p-3 mb-2 text-sm text-amber-800">
+            <strong>Atenção:</strong> No momento, os pedidos são exclusivos para revendas. Se você é produtor e deseja conhecer nossos produtos, entre em contato pelo WhatsApp.
+          </div>
+          <div id="store-field-wrapper">
+            <label id="form-store-label" class="block text-sm font-medium text-gray-700 mb-1">Nome da Revenda *</label>
+            <input type="text" id="form-store" required class="w-full border border-gray-300 rounded-lg px-3 py-3 text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none" placeholder="Nome da sua revenda">
+          </div>
         </div>
 
         <!-- Resumo do pedido -->
@@ -1033,12 +1038,24 @@
       const type = document.querySelector('input[name="store-type"]:checked').value;
       const label = document.getElementById('form-store-label');
       const input = document.getElementById('form-store');
+      const warning = document.getElementById('produtor-warning');
+      const storeWrapper = document.getElementById('store-field-wrapper');
+      const submitBtn = document.getElementById('submit-btn');
+
       if (type === 'revenda') {
         label.textContent = 'Nome da Revenda *';
         input.placeholder = 'Nome da sua revenda';
+        warning.classList.add('hidden');
+        storeWrapper.classList.remove('hidden');
+        input.required = true;
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
       } else {
-        label.textContent = 'Nome da Propriedade *';
-        input.placeholder = 'Nome da sua propriedade';
+        warning.classList.remove('hidden');
+        storeWrapper.classList.add('hidden');
+        input.required = false;
+        submitBtn.disabled = true;
+        submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
       }
     }
 
@@ -1059,6 +1076,8 @@
       const store = document.getElementById('form-store').value.trim();
       const storeType = document.querySelector('input[name="store-type"]:checked').value;
       const notes = document.getElementById('cart-notes')?.value?.trim() || '';
+
+      if (storeType === 'produtor') return;
 
       if (!name || !whatsapp || whatsapp.length < 10 || !store) {
         alert('Preencha todos os campos obrigatórios.');
