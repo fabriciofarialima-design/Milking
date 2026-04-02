@@ -153,7 +153,7 @@
       const whatsapp = parts[2];
       const store = decodeURIComponent(parts[3]);
       const timestamp = parts[4];
-      const itemsRaw = parts.slice(5).join('|');
+      const itemsRaw = parts.slice(5).join(sep);
 
       const items = itemsRaw.split(',').map(pair => {
         const [code, qty] = pair.split(':');
