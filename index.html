@@ -659,24 +659,53 @@
       container.innerHTML = html;
     }
 
+    function updateFilterHash() {
+      if (currentCategory !== 'todos') {
+        history.replaceState(null, '', '#categoria/' + encodeURIComponent(currentCategory));
+      } else if (currentBrand !== 'todos') {
+        history.replaceState(null, '', '#marca/' + encodeURIComponent(currentBrand));
+      } else {
+        history.replaceState(null, '', window.location.pathname);
+      }
+    }
+
+    function applyFilterFromHash() {
+      const hash = decodeURIComponent(window.location.hash.substring(1));
+      if (hash.startsWith('categoria/')) {
+        currentCategory = hash.substring(10);
+        currentBrand = 'todos';
+      } else if (hash.startsWith('marca/')) {
+        currentBrand = hash.substring(6);
+        currentCategory = 'todos';
+      }
+    }
+
     function filterCategory(cat) {
       currentCategory = cat;
+      currentBrand = 'todos';
       currentPage = 1;
       document.getElementById('mobile-cat-panel')?.classList.add('hidden');
       updateMobileCatLabel();
+      updateMobileBrandLabel();
       renderSidebarList();
       renderMobileCategoryList();
+      renderMobileBrandList();
       renderProducts();
+      updateFilterHash();
     }
 
     function filterBrand(brand) {
       currentBrand = brand;
+      currentCategory = 'todos';
       currentPage = 1;
       document.getElementById('mobile-brand-panel')?.classList.add('hidden');
+      updateMobileCatLabel();
       updateMobileBrandLabel();
       renderSidebarList();
+      renderMobileCategoryList();
       renderMobileBrandList();
       renderProducts();
+      updateFilterHash();
     }
 
     function matchesSearch(product, term) {
@@ -1163,6 +1192,7 @@
     // INICIALIZAÇÃO
     // ==============================
     function init() {
+      applyFilterFromHash();
       renderCategorySelect();
       renderProducts();
       updateCartUI();
