@@ -5,3 +5,4 @@ evolution-api/
 n8n-workflow.json
 milking_products.json
 qrcode_whatsapp.png
+node_modules/
