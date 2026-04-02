@@ -478,7 +478,7 @@
       container.innerHTML = cart.map(item => `
         <div class="bg-gray-50 rounded-lg p-3 flex items-center gap-3">
           <div class="w-14 h-14 bg-white rounded-lg overflow-hidden shrink-0 flex items-center justify-center border border-gray-200">
-            <img src="https://pedidook.s3-sa-east-1.amazonaws.com/656/produto/foto_${item.id}.jpg" alt="${item.name}" class="w-full h-full object-contain" loading="lazy" onerror="this.onerror=null;this.parentElement.innerHTML='<svg class=\\'w-6 h-6 text-gray-300\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'1\\' viewBox=\\'0 0 24 24\\'><path stroke-linecap=\\'round\\' stroke-linejoin=\\'round\\' d=\\'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4\\'/></svg>'">
+            <img src="${item.image || `https://pedidook.s3-sa-east-1.amazonaws.com/656/produto/foto_${item.id}.jpg`}" alt="${item.name}" class="w-full h-full object-contain" loading="lazy" onerror="this.onerror=null;this.parentElement.innerHTML='<svg class=\\'w-6 h-6 text-gray-300\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'1\\' viewBox=\\'0 0 24 24\\'><path stroke-linecap=\\'round\\' stroke-linejoin=\\'round\\' d=\\'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4\\'/></svg>'">
           </div>
           <div class="flex-1 min-w-0">
             <h4 class="text-sm font-semibold text-gray-800 truncate">${item.name}</h4>
@@ -766,7 +766,7 @@
         return `
           <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden flex flex-col">
             <div class="bg-gray-100 aspect-square flex items-center justify-center overflow-hidden">
-              <img src="https://pedidook.s3-sa-east-1.amazonaws.com/656/produto/foto_${p.id}.jpg"
+              <img src="${p.image || `https://pedidook.s3-sa-east-1.amazonaws.com/656/produto/foto_${p.id}.jpg`}"
                    alt="${p.name}"
                    class="w-full h-full object-contain"
                    loading="lazy"
@@ -934,6 +934,7 @@
           name: product.name,
           package: product.package,
           reference: product.reference,
+          image: product.image || '',
           qty: 1
         });
       }
@@ -1008,7 +1009,7 @@
       container.innerHTML = cart.map(item => `
         <div class="bg-white rounded-lg border border-gray-200 p-4 flex items-center gap-3">
           <div class="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden shrink-0 flex items-center justify-center border border-gray-200">
-            <img src="https://pedidook.s3-sa-east-1.amazonaws.com/656/produto/foto_${item.id}.jpg" alt="${item.name}" class="w-full h-full object-contain" loading="lazy" onerror="this.onerror=null;this.parentElement.innerHTML='<svg class=\\'w-7 h-7 text-gray-300\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'1\\' viewBox=\\'0 0 24 24\\'><path stroke-linecap=\\'round\\' stroke-linejoin=\\'round\\' d=\\'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4\\'/></svg>'">
+            <img src="${item.image || `https://pedidook.s3-sa-east-1.amazonaws.com/656/produto/foto_${item.id}.jpg`}" alt="${item.name}" class="w-full h-full object-contain" loading="lazy" onerror="this.onerror=null;this.parentElement.innerHTML='<svg class=\\'w-7 h-7 text-gray-300\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'1\\' viewBox=\\'0 0 24 24\\'><path stroke-linecap=\\'round\\' stroke-linejoin=\\'round\\' d=\\'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4\\'/></svg>'">
           </div>
           <div class="flex-1 min-w-0">
             <h4 class="text-sm font-semibold text-gray-800 truncate">${item.name}</h4>
@@ -1047,7 +1048,7 @@
 
       container.innerHTML = cart.map(item =>
         `<div class="flex items-center gap-3 py-1">
-          <img src="https://pedidook.s3-sa-east-1.amazonaws.com/656/produto/foto_${item.id}.jpg" alt="${item.name}" class="w-10 h-10 object-cover rounded border border-gray-200 shrink-0">
+          <img src="${item.image || `https://pedidook.s3-sa-east-1.amazonaws.com/656/produto/foto_${item.id}.jpg`}" alt="${item.name}" class="w-10 h-10 object-cover rounded border border-gray-200 shrink-0">
           <div class="flex justify-between flex-1 min-w-0">
             <span class="truncate">${item.qty}x ${item.name}</span>
             <span class="text-gray-400 shrink-0 ml-2">${item.package}</span>
