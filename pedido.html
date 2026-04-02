@@ -144,7 +144,8 @@
       const hash = window.location.hash.substring(1);
       if (!hash) return null;
 
-      const parts = hash.split('|');
+      const sep = hash.includes('~') ? '~' : '|';
+      const parts = hash.split(sep);
       if (parts.length < 6) return null;
 
       const quoteCode = parts[0];

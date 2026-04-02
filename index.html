@@ -165,7 +165,7 @@
           <div id="results-count" class="text-xs text-gray-400 mb-2"></div>
 
           <!-- Grid de produtos -->
-          <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-3">
+          <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             <!-- Renderizado via JS -->
           </div>
 
@@ -1090,7 +1090,7 @@
       const itemsStr = cart.map(i => `${i.code}:${i.qty}`).join(',');
       const timestamp = new Date().toISOString();
       const baseUrl = new URL('pedido.html', window.location.href).href;
-      const orderUrl = `${baseUrl}#${quoteCode}|${encodeURIComponent(name)}|55${whatsapp}|${encodeURIComponent(store)}|${timestamp}|${itemsStr}`;
+      const orderUrl = `${baseUrl}#${quoteCode}~${encodeURIComponent(name)}~55${whatsapp}~${encodeURIComponent(store)}~${timestamp}~${itemsStr}`;
 
       const payload = {
         quoteCode,
