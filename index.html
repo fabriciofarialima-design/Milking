@@ -3,6 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-M75FTZKF');</script>
+  <!-- End Google Tag Manager -->
   <title>Milking Distribuidora — Solicite seu Orçamento</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -10,22 +17,46 @@
       theme: {
         extend: {
           colors: {
-            brand: { 50: '#e8f2fb', 100: '#c5dff3', 500: '#2a88cc', 600: '#0d71b9', 700: '#0a5e9a', 800: '#084a7a', 900: '#063b5b' }
+            brand: { 50: '#e8f2fb', 100: '#c5dff3', 500: '#2a88cc', 600: '#0d71b9', 700: '#0a5e9a', 800: '#084a7a', 900: '#063b5b' },
+            surface: { 50: '#f7f9fc', 100: '#eef2f7', 200: '#dde4ed', 300: '#c4cfdc' },
+          },
+          borderRadius: {
+            DEFAULT: '0.625rem',
           }
         }
       }
     }
   </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&display=swap" rel="stylesheet">
   <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; }
     [x-cloak] { display: none !important; }
-    .fade-in { animation: fadeIn 0.2s ease-in; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-in { animation: fadeIn 0.3s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
     .autocomplete-list { max-height: 240px; overflow-y: auto; }
     button, a, select, input[type="radio"], [onclick] { cursor: pointer !important; }
     button:disabled { cursor: not-allowed !important; }
+    .card-product { transition: transform 0.2s cubic-bezier(.22,1,.36,1), box-shadow 0.2s cubic-bezier(.22,1,.36,1); }
+    .card-product:hover { transform: translateY(-3px); box-shadow: 0 12px 28px -8px rgba(6,59,91,0.12); }
+    input:focus, textarea:focus, select:focus { transition: border-color 0.15s ease, box-shadow 0.15s ease; }
+    @keyframes cartPop { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
+    .cart-pop { animation: cartPop 0.3s cubic-bezier(.22,1,.36,1); }
+    #bottom-cart-bar { transform: translateY(100%); transition: transform 0.35s cubic-bezier(.22,1,.36,1); }
+    #bottom-cart-bar.visible { transform: translateY(0); }
+    #bar-items::-webkit-scrollbar { display: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .card-product, .fade-in, .cart-pop { animation: none !important; transition: none !important; }
+    }
   </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="bg-surface-50 min-h-screen">
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M75FTZKF"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 
   <!-- ============================================ -->
   <!-- APP ROOT -->
@@ -33,12 +64,12 @@
   <div id="app">
 
     <!-- ========== HEADER ========== -->
-    <header class="bg-brand-900 text-white sticky top-0 z-50 shadow-md">
-      <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+    <header class="bg-brand-900/95 backdrop-blur-md text-white sticky top-0 z-50 shadow-lg border-b border-white/5">
+      <div class="max-w-5xl mx-auto px-4 py-3.5 flex items-center justify-between">
         <a href="#" onclick="showScreen('catalog');return false;" class="flex items-center gap-3">
           <img src="Logo-milking-liners.svg" alt="Milking Liners" class="h-[2.34rem]">
         </a>
-        <span class="text-sm font-semibold tracking-wide">Orçamentos</span>
+        <span class="text-sm font-semibold tracking-wide uppercase text-white/70">Orçamentos</span>
         <button id="nav-cart-btn" onclick="showScreen('cart')" disabled class="group relative flex items-center gap-2 px-3 py-2 rounded-lg transition-colors opacity-50 cursor-not-allowed" aria-label="Ver orçamento">
           <span id="nav-cart-tooltip" class="pointer-events-none absolute top-full right-0 mt-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-75 transition-opacity duration-200 shadow-lg">
             Sua lista está vazia
@@ -52,16 +83,94 @@
     </header>
 
     <!-- ========== TELA 1: CATÁLOGO ========== -->
-    <main id="screen-catalog" class="max-w-5xl mx-auto px-4 py-4">
+    <main id="screen-catalog">
+
+      <!-- ========== HERO SECTION ========== -->
+      <section class="relative bg-brand-900 text-white overflow-hidden">
+        <div class="absolute inset-0 bg-[linear-gradient(135deg,#084a7a_0%,#063b5b_50%,#0a5e9a_100%)]"></div>
+        <div class="absolute top-0 right-0 w-1/2 h-full opacity-[0.04]">
+          <svg viewBox="0 0 400 400" fill="none" class="w-full h-full"><circle cx="300" cy="200" r="300" stroke="white" stroke-width="0.5"/><circle cx="300" cy="200" r="200" stroke="white" stroke-width="0.5"/><circle cx="300" cy="200" r="100" stroke="white" stroke-width="0.5"/></svg>
+        </div>
+        <div class="relative max-w-5xl mx-auto px-4 py-12 sm:py-16 lg:py-20">
+          <div class="max-w-2xl">
+            <div class="flex items-center gap-2 mb-5">
+              <span class="w-8 h-[2px] bg-brand-500"></span>
+              <span class="text-brand-100/80 text-xs font-semibold tracking-widest uppercase">Distribuidora Milking</span>
+            </div>
+            <h1 class="text-3xl sm:text-4xl lg:text-[2.75rem] font-extrabold leading-[1.15] mb-4 tracking-tight">Produtos de qualidade<br>para o manejo leiteiro</h1>
+            <p class="text-base sm:text-lg text-surface-300 mb-8 leading-relaxed max-w-lg">Higiene, saúde animal e eficiência na ordenha. Monte sua lista e receba uma cotação personalizada.</p>
+            <div class="flex flex-wrap items-center gap-3">
+              <a href="#catalogo" class="inline-flex items-center gap-2 bg-white text-brand-800 font-bold px-7 py-3 rounded-xl shadow-lg hover:shadow-xl hover:bg-surface-50 transition-all text-sm">
+                Ver Produtos
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+              </a>
+              <a href="https://wa.me/5534998991588" target="_blank" class="inline-flex items-center gap-2 text-white/80 hover:text-white font-medium text-sm transition-colors">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                Falar com vendedor
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4 Destaques -->
+      <section class="bg-white border-b border-surface-200">
+        <div class="max-w-5xl mx-auto px-4 py-5 flex flex-wrap items-center justify-between gap-y-3 gap-x-6 sm:gap-x-0">
+
+          <div class="flex items-center gap-3 w-[calc(50%-12px)] sm:w-auto">
+            <svg class="w-5 h-5 text-brand-600 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+            <div>
+              <p class="text-sm font-bold text-gray-800 leading-tight">Linha Completa</p>
+              <p class="text-[11px] text-gray-500">Todas as etapas da ordenha</p>
+            </div>
+          </div>
+
+          <div class="hidden sm:block w-px h-8 bg-surface-200"></div>
+
+          <div class="flex items-center gap-3 w-[calc(50%-12px)] sm:w-auto">
+            <svg class="w-5 h-5 text-amber-500 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            <div>
+              <p class="text-sm font-bold text-gray-800 leading-tight">Entrega Rápida</p>
+              <p class="text-[11px] text-gray-500">Antes de 12h, sai no mesmo dia*</p>
+            </div>
+          </div>
+
+          <div class="hidden sm:block w-px h-8 bg-surface-200"></div>
+
+          <div class="flex items-center gap-3 w-[calc(50%-12px)] sm:w-auto">
+            <svg class="w-5 h-5 text-emerald-500 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 17h8M8 17a2 2 0 11-4 0m4 0a2 2 0 10-4 0m12 0a2 2 0 11-4 0m4 0a2 2 0 10-4 0M3 9h1l1.5-4.5A1 1 0 016.44 4h5.12a1 1 0 01.95.68L14 9h5a2 2 0 012 2v4a1 1 0 01-1 1h-1"/></svg>
+            <div>
+              <p class="text-sm font-bold text-gray-800 leading-tight">Frete Grátis</p>
+              <p class="text-[11px] text-gray-500">Acima de R$ 1.000</p>
+            </div>
+          </div>
+
+          <div class="hidden sm:block w-px h-8 bg-surface-200"></div>
+
+          <div class="flex items-center gap-3 w-[calc(50%-12px)] sm:w-auto">
+            <svg class="w-5 h-5 text-brand-600 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            <div>
+              <p class="text-sm font-bold text-gray-800 leading-tight">Pedido pelo WhatsApp</p>
+              <p class="text-[11px] text-gray-500">Monte sua lista e envie</p>
+            </div>
+          </div>
+
+        </div>
+        <p class="text-center text-[10px] text-gray-400 pb-2 -mt-1">*Consultar disponibilidade de estoque</p>
+      </section>
+
+      <!-- ========== CATÁLOGO ========== -->
+      <div id="catalogo" class="max-w-5xl mx-auto px-4 py-4">
 
       <!-- Mensagem institucional -->
-      <div class="bg-brand-50 border border-brand-100 rounded-lg p-3 mb-4 text-sm text-brand-800">
-        Monte sua lista de produtos e envie para cotação. <strong>Nosso time comercial entrará em contato pelo WhatsApp para fechar o pedido com os melhores valores.</strong>
+      <div class="bg-gradient-to-r from-brand-50 to-blue-50 border border-brand-100 rounded-xl p-4 mb-5 text-sm text-brand-800 flex items-start gap-3">
+        <svg class="w-5 h-5 text-brand-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span>Monte sua lista de produtos e envie para cotação. <strong>Nosso time comercial entrará em contato pelo WhatsApp para fechar o pedido com os melhores valores.</strong></span>
       </div>
 
       <!-- Busca com autocomplete -->
-      <div class="relative mb-4">
-        <div class="flex items-center bg-white border border-gray-300 rounded-lg shadow-sm focus-within:ring-2 focus-within:ring-brand-500 focus-within:border-brand-500">
+      <div class="relative mb-5">
+        <div class="flex items-center bg-white border border-gray-200 rounded-xl shadow-sm focus-within:ring-2 focus-within:ring-brand-500/30 focus-within:border-brand-500 transition-all">
           <svg class="w-5 h-5 text-gray-400 ml-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
           <input
             id="search-input"
@@ -134,7 +243,7 @@
 
         <!-- Sidebar categorias/marcas: DESKTOP -->
         <aside id="category-sidebar" class="hidden lg:block lg:w-72 lg:shrink-0">
-          <div class="bg-white border border-gray-200 rounded-lg shadow-sm sticky top-16 max-h-[calc(100vh-5rem)] flex flex-col">
+          <div class="bg-white border border-gray-100 rounded-xl shadow-sm sticky top-16 max-h-[calc(100vh-5rem)] flex flex-col overflow-hidden">
             <!-- Tabs -->
             <div class="flex border-b border-gray-200">
               <button id="tab-categories" onclick="switchSidebarTab('categories')" class="flex-1 px-3 py-2.5 text-sm font-semibold text-brand-600 border-b-2 border-brand-600">Categorias</button>
@@ -165,7 +274,7 @@
           <div id="results-count" class="text-xs text-gray-400 mb-2"></div>
 
           <!-- Grid de produtos -->
-          <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+          <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             <!-- Renderizado via JS -->
           </div>
 
@@ -179,10 +288,11 @@
       </div>
 
       <!-- FAB carrinho (mobile) -->
-      <button id="fab-cart" onclick="showScreen('cart')" class="hidden fixed bottom-6 right-6 bg-brand-600 text-white rounded-full w-14 h-14 shadow-lg flex items-center justify-center hover:bg-brand-700 transition-colors z-40 md:hidden">
+      <button id="fab-cart" onclick="showScreen('cart')" class="hidden fixed bottom-6 right-6 bg-brand-600 text-white rounded-2xl w-14 h-14 shadow-xl shadow-brand-600/30 flex items-center justify-center hover:bg-brand-700 active:scale-95 transition-all z-40 md:hidden">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
         <span id="fab-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
       </button>
+      </div><!-- /catalogo -->
     </main>
 
     <!-- ========== TELA 2: CESTA DE ORÇAMENTO ========== -->
@@ -192,7 +302,7 @@
         Voltar ao catálogo
       </button>
 
-      <h2 class="text-xl font-bold text-gray-800 mb-4">Cesta de Orçamento</h2>
+      <h2 class="text-2xl font-extrabold text-gray-800 mb-4">Cesta de Orçamento</h2>
 
       <div id="cart-empty" class="hidden text-center py-12 text-gray-500">
         <svg class="w-16 h-16 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
@@ -209,10 +319,10 @@
           <label class="block text-sm font-medium text-gray-700 mb-1">Observações (opcional)</label>
           <textarea id="cart-notes" rows="3" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none" placeholder="Ex: Preciso de entrega urgente, preço para pagamento à vista..."></textarea>
         </div>
-        <button onclick="showScreen('form')" class="w-full bg-brand-600 text-white font-semibold py-3 rounded-lg hover:bg-brand-700 transition-colors">
+        <button onclick="showScreen('form')" class="w-full bg-brand-600 text-white font-bold py-3.5 rounded-xl hover:bg-brand-700 active:scale-[0.99] transition-all shadow-md shadow-brand-600/20">
           Solicitar este orçamento
         </button>
-        <button onclick="showScreen('catalog')" class="w-full mt-2 border-2 border-brand-600 text-brand-600 font-semibold py-3 rounded-lg hover:bg-brand-50 transition-colors">
+        <button onclick="showScreen('catalog')" class="w-full mt-2 border-2 border-brand-600 text-brand-600 font-bold py-3.5 rounded-xl hover:bg-brand-50 active:scale-[0.99] transition-all">
           Adicionar mais itens
         </button>
       </div>
@@ -225,20 +335,21 @@
         Adicionar mais produtos
       </button>
 
-      <h2 class="text-xl font-bold text-gray-800 mb-4">Enviar Solicitação de Orçamento</h2>
+      <h2 class="text-2xl font-extrabold text-gray-800 mb-4">Enviar Solicitação de Orçamento</h2>
 
-      <div class="bg-brand-50 border border-brand-100 rounded-lg p-3 mb-4 text-sm text-brand-800">
-        Nosso time comercial entrará em contato pelo <strong>WhatsApp</strong> informado abaixo para fechar o pedido com os valores.
+      <div class="bg-gradient-to-r from-brand-50 to-blue-50 border border-brand-100 rounded-xl p-4 mb-5 text-sm text-brand-800 flex items-start gap-3">
+        <svg class="w-5 h-5 text-brand-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+        <span>Nosso time comercial entrará em contato pelo <strong>WhatsApp</strong> informado abaixo para fechar o pedido com os valores.</span>
       </div>
 
       <form id="quote-form" onsubmit="submitQuote(event)" class="space-y-4 mb-6">
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Nome *</label>
-          <input type="text" id="form-name" required class="w-full border border-gray-300 rounded-lg px-3 py-3 text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none" placeholder="Seu nome">
+          <input type="text" id="form-name" required class="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 outline-none transition-all" placeholder="Seu nome">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">WhatsApp *</label>
-          <input type="tel" id="form-whatsapp" required class="w-full border border-gray-300 rounded-lg px-3 py-3 text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none" placeholder="(00) 00000-0000" oninput="maskWhatsApp(this)">
+          <input type="tel" id="form-whatsapp" required class="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 outline-none transition-all" placeholder="(00) 00000-0000" oninput="maskWhatsApp(this)">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de estabelecimento *</label>
@@ -257,20 +368,24 @@
           </div>
           <div id="store-field-wrapper">
             <label id="form-store-label" class="block text-sm font-medium text-gray-700 mb-1">Nome da Revenda *</label>
-            <input type="text" id="form-store" required class="w-full border border-gray-300 rounded-lg px-3 py-3 text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none" placeholder="Nome da sua revenda">
+            <input type="text" id="form-store" required class="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 outline-none transition-all" placeholder="Nome da sua revenda">
           </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">CNPJ</label>
+          <input type="text" id="form-cnpj" class="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 outline-none transition-all" placeholder="00.000.000/0000-00" oninput="maskCNPJ(this)" maxlength="18">
         </div>
 
         <!-- Resumo do pedido -->
-        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
-          <h3 class="text-sm font-semibold text-gray-700 mb-2">Resumo do orçamento</h3>
+        <div class="bg-gray-50 border border-gray-100 rounded-xl p-4">
+          <h3 class="text-sm font-bold text-gray-700 mb-2">Resumo do orçamento</h3>
           <div id="form-summary" class="space-y-1 text-sm text-gray-600">
             <!-- Renderizado via JS -->
           </div>
           <div id="form-notes-display" class="hidden mt-2 pt-2 border-t border-gray-200 text-sm text-gray-500 italic"></div>
         </div>
 
-        <button type="submit" id="submit-btn" class="w-full bg-brand-600 text-white font-semibold py-3 rounded-lg hover:bg-brand-700 transition-colors flex items-center justify-center gap-2">
+        <button type="submit" id="submit-btn" class="w-full bg-brand-600 text-white font-bold py-3.5 rounded-xl hover:bg-brand-700 active:scale-[0.99] transition-all shadow-md shadow-brand-600/20 flex items-center justify-center gap-2">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
           Enviar Solicitação de Orçamento
         </button>
@@ -278,12 +393,12 @@
     </main>
 
     <!-- ========== TELA 4: SUCESSO ========== -->
-    <main id="screen-success" class="hidden max-w-5xl mx-auto px-4 py-12 text-center fade-in">
-      <div class="bg-white rounded-2xl shadow-lg p-8 max-w-md mx-auto">
-        <div class="w-16 h-16 bg-brand-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg class="w-8 h-8 text-brand-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+    <main id="screen-success" class="hidden max-w-5xl mx-auto px-4 py-16 text-center fade-in">
+      <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 sm:p-10 max-w-md mx-auto">
+        <div class="w-20 h-20 bg-gradient-to-br from-emerald-100 to-emerald-50 rounded-full flex items-center justify-center mx-auto mb-5">
+          <svg class="w-10 h-10 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
         </div>
-        <h2 class="text-xl font-bold text-gray-800 mb-2">Orçamento Enviado!</h2>
+        <h2 class="text-2xl font-extrabold text-gray-800 mb-2">Orçamento Enviado!</h2>
         <p class="text-sm text-gray-500 mb-1">Seu código de orçamento:</p>
         <p id="success-quote-code" class="text-2xl font-bold text-brand-600 mb-4 font-mono"></p>
         <p class="text-gray-600 text-sm mb-6">Nosso time comercial entrará em contato para apresentar os valores e fechar o pedido. Você também pode falar diretamente com um vendedor:</p>
@@ -297,6 +412,34 @@
       </div>
     </main>
 
+  </div>
+
+  <!-- ========== BARRA CARRINHO BOTTOM ========== -->
+  <div id="bottom-cart-bar" class="fixed bottom-0 inset-x-0 z-50 bg-white border-t border-surface-200 shadow-[0_-4px_24px_rgba(6,59,91,0.10)]">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-3">
+      <!-- Esquerda: contagem -->
+      <button onclick="showScreen('cart')" class="flex items-center gap-2 shrink-0">
+        <div class="relative">
+          <svg class="w-5 h-5 text-brand-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+          <span id="bar-badge" class="absolute -top-2 -right-2.5 bg-brand-600 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">0</span>
+        </div>
+        <span id="bar-count" class="text-sm font-bold text-gray-800 hidden sm:inline">0 itens</span>
+      </button>
+
+      <!-- Separador -->
+      <div class="w-px h-6 bg-surface-200 shrink-0"></div>
+
+      <!-- Centro: itens -->
+      <div id="bar-items" class="flex-1 min-w-0 overflow-x-auto flex items-center gap-1.5 scrollbar-none" style="-ms-overflow-style:none;scrollbar-width:none;">
+        <!-- Renderizado via JS -->
+      </div>
+
+      <!-- Direita: CTA -->
+      <button onclick="showScreen('cart')" class="shrink-0 bg-brand-600 text-white text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-brand-700 active:scale-[0.98] transition-all shadow-md shadow-brand-600/20">
+        <span class="hidden sm:inline">Solicitar Orçamento</span>
+        <span class="sm:hidden">Orçamento</span>
+      </button>
+    </div>
   </div>
 
   <!-- ========== DRAWER CESTA: DESKTOP ========== -->
@@ -325,10 +468,10 @@
         <label class="block text-sm font-medium text-gray-700 mb-1">Observações (opcional)</label>
         <textarea id="drawer-cart-notes" rows="2" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none" placeholder="Ex: Entrega urgente, pagamento à vista..."></textarea>
       </div>
-      <button onclick="goToFormFromDrawer()" class="w-full bg-brand-600 text-white font-semibold py-3 rounded-lg hover:bg-brand-700 transition-colors">
+      <button onclick="goToFormFromDrawer()" class="w-full bg-brand-600 text-white font-bold py-3.5 rounded-xl hover:bg-brand-700 active:scale-[0.99] transition-all shadow-md shadow-brand-600/20">
         Solicitar este orçamento
       </button>
-      <button onclick="closeCartDrawer()" class="w-full border-2 border-brand-600 text-brand-600 font-semibold py-3 rounded-lg hover:bg-brand-50 transition-colors">
+      <button onclick="closeCartDrawer()" class="w-full border-2 border-brand-600 text-brand-600 font-bold py-3.5 rounded-xl hover:bg-brand-50 active:scale-[0.99] transition-all">
         Adicionar mais itens
       </button>
     </div>
@@ -412,6 +555,14 @@
 
       // Fechar autocomplete ao trocar tela
       document.getElementById('autocomplete-list').classList.add('hidden');
+
+      // Barra bottom só visível na tela de catálogo
+      const bottomBar = document.getElementById('bottom-cart-bar');
+      if (name === 'catalog' && cart.length > 0) {
+        bottomBar.classList.add('visible');
+      } else {
+        bottomBar.classList.remove('visible');
+      }
 
       if (name === 'cart') renderCart();
       if (name === 'form') renderFormSummary();
@@ -764,27 +915,27 @@
       grid.innerHTML = products.map(p => {
         const inCart = cart.find(c => c.code === p.code);
         return `
-          <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden flex flex-col">
-            <div class="bg-gray-100 aspect-square flex items-center justify-center overflow-hidden">
+          <div class="card-product bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
+            <div class="bg-gradient-to-b from-surface-50 to-surface-100 aspect-square flex items-center justify-center overflow-hidden p-3">
               <img src="${p.image || `https://pedidook.s3-sa-east-1.amazonaws.com/656/produto/foto_${p.id}.jpg`}"
                    alt="${p.name}"
-                   class="w-full h-full object-contain"
+                   class="w-full h-full object-contain mix-blend-multiply"
                    loading="lazy"
                    onerror="this.onerror=null;this.parentElement.innerHTML='<svg class=\\'w-12 h-12 text-gray-300\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'1\\' viewBox=\\'0 0 24 24\\'><path stroke-linecap=\\'round\\' stroke-linejoin=\\'round\\' d=\\'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4\\'/></svg>'">
             </div>
             <div class="p-3 flex flex-col flex-1">
-              <span class="text-xs text-gray-400 mb-1">Cód. ${p.code}${p.reference ? ' | Ref. ' + p.reference : ''}</span>
-              <h3 class="text-sm font-semibold text-gray-800 leading-tight mb-1">${p.name}</h3>
-              <span class="text-xs text-gray-500 mb-1">${p.brand}</span>
-              <span class="text-xs text-gray-500 mb-3">Emb.: ${p.package}</span>
+              <span class="text-[11px] text-gray-400 mb-1 font-medium">Cód. ${p.code}${p.reference ? ' | Ref. ' + p.reference : ''}</span>
+              <h3 class="text-sm font-bold text-gray-800 leading-snug mb-1">${p.name}</h3>
+              <span class="text-xs text-gray-500 mb-0.5">${p.brand}</span>
+              <span class="text-xs text-gray-400 mb-3">Emb.: ${p.package}</span>
               <div class="mt-auto">
                 ${inCart
-                  ? `<div class="flex items-center justify-between bg-brand-50 rounded-lg px-2 py-1">
-                      <button onclick="updateQty('${p.code}', -1)" class="w-8 h-8 flex items-center justify-center text-brand-700 font-bold text-lg rounded hover:bg-brand-100">-</button>
-                      <span class="text-sm font-semibold text-brand-800">${inCart.qty}</span>
-                      <button onclick="updateQty('${p.code}', 1)" class="w-8 h-8 flex items-center justify-center text-brand-700 font-bold text-lg rounded hover:bg-brand-100">+</button>
+                  ? `<div class="flex items-center justify-between bg-brand-50 rounded-xl px-2 py-1.5">
+                      <button onclick="updateQty('${p.code}', -1)" class="w-8 h-8 flex items-center justify-center text-brand-700 font-bold text-lg rounded-lg hover:bg-brand-100 transition-colors">-</button>
+                      <span class="text-sm font-bold text-brand-800">${inCart.qty}</span>
+                      <button onclick="updateQty('${p.code}', 1)" class="w-8 h-8 flex items-center justify-center text-brand-700 font-bold text-lg rounded-lg hover:bg-brand-100 transition-colors">+</button>
                     </div>`
-                  : `<button onclick="addToCart('${p.code}')" class="w-full bg-brand-600 text-white text-sm font-medium py-2 rounded-lg hover:bg-brand-700 transition-colors">Adicionar</button>`
+                  : `<button onclick="addToCart('${p.code}')" class="w-full bg-brand-600 text-white text-sm font-semibold py-2.5 rounded-xl hover:bg-brand-700 active:scale-[0.98] transition-all">Adicionar</button>`
                 }
               </div>
             </div>
@@ -805,7 +956,7 @@
       btn.id = 'load-more';
       btn.className = 'col-span-full text-center py-4';
       btn.innerHTML = `
-        <button onclick="loadMore()" class="text-brand-600 font-medium text-sm hover:underline px-6 py-2 border border-brand-600 rounded-lg hover:bg-brand-50 transition-colors">
+        <button onclick="loadMore()" class="text-brand-600 font-semibold text-sm px-6 py-2.5 border-2 border-brand-600 rounded-xl hover:bg-brand-50 active:scale-[0.98] transition-all">
           Carregar mais produtos (${shown} de ${total})
         </button>
       `;
@@ -941,8 +1092,11 @@
       saveCart();
       renderProducts();
 
-      // Desktop: abrir drawer ao adicionar item
-      if (isDesktop()) openCartDrawer();
+      // Feedback visual no badge do carrinho
+      const badge = document.getElementById('cart-badge');
+      if (badge) { badge.classList.remove('cart-pop'); void badge.offsetWidth; badge.classList.add('cart-pop'); }
+      const barBadge = document.getElementById('bar-badge');
+      if (barBadge) { barBadge.classList.remove('cart-pop'); void barBadge.offsetWidth; barBadge.classList.add('cart-pop'); }
     }
 
     function updateQty(code, delta) {
@@ -966,29 +1120,54 @@
     function updateCartUI() {
       const count = cart.reduce((sum, item) => sum + item.qty, 0);
       const badge = document.getElementById('cart-badge');
-      const fabBadge = document.getElementById('fab-badge');
-      const fab = document.getElementById('fab-cart');
       const navBtn = document.getElementById('nav-cart-btn');
+      const bottomBar = document.getElementById('bottom-cart-bar');
+      const catalog = document.getElementById('screen-catalog');
 
       if (count > 0) {
         badge.textContent = count;
         badge.classList.remove('hidden');
-        fabBadge.textContent = count;
-        fab.classList.remove('hidden');
-        fab.classList.add('flex');
         navBtn.disabled = false;
         navBtn.classList.remove('opacity-50', 'cursor-not-allowed');
         navBtn.classList.add('hover:bg-brand-600');
         document.getElementById('nav-cart-tooltip').classList.add('hidden');
+
+        // Bottom bar
+        bottomBar.classList.add('visible');
+        catalog.classList.add('pb-24');
+        renderBottomBar();
       } else {
         badge.classList.add('hidden');
-        fab.classList.add('hidden');
-        fab.classList.remove('flex');
         navBtn.disabled = true;
         navBtn.classList.add('opacity-50', 'cursor-not-allowed');
         navBtn.classList.remove('hover:bg-brand-600');
         document.getElementById('nav-cart-tooltip').classList.remove('hidden');
+
+        // Bottom bar
+        bottomBar.classList.remove('visible');
+        catalog.classList.remove('pb-24');
       }
+
+      // FAB fica sempre escondido (substituído pela barra bottom)
+      document.getElementById('fab-cart').classList.add('hidden');
+      document.getElementById('fab-cart').classList.remove('flex');
+    }
+
+    function renderBottomBar() {
+      const barBadge = document.getElementById('bar-badge');
+      const barCount = document.getElementById('bar-count');
+      const barItems = document.getElementById('bar-items');
+      const count = cart.reduce((sum, item) => sum + item.qty, 0);
+
+      barBadge.textContent = count;
+      barCount.textContent = `${count} ${count === 1 ? 'item' : 'itens'}`;
+
+      barItems.innerHTML = cart.map(item => `
+        <span class="inline-flex items-center gap-1 bg-surface-100 text-gray-700 text-xs font-medium px-2.5 py-1 rounded-lg whitespace-nowrap shrink-0">
+          ${item.name.length > 20 ? item.name.substring(0, 20) + '…' : item.name}
+          <span class="text-brand-600 font-bold">${item.qty}x</span>
+        </span>
+      `).join('');
     }
 
     function renderCart() {
@@ -1098,12 +1277,23 @@
       input.value = v;
     }
 
+    function maskCNPJ(input) {
+      let v = input.value.replace(/\D/g, '');
+      if (v.length > 14) v = v.slice(0, 14);
+      if (v.length > 12) v = v.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{1,2})/, '$1.$2.$3/$4-$5');
+      else if (v.length > 8) v = v.replace(/^(\d{2})(\d{3})(\d{3})(\d{1,4})/, '$1.$2.$3/$4');
+      else if (v.length > 5) v = v.replace(/^(\d{2})(\d{3})(\d{1,3})/, '$1.$2.$3');
+      else if (v.length > 2) v = v.replace(/^(\d{2})(\d{1,3})/, '$1.$2');
+      input.value = v;
+    }
+
     async function submitQuote(event) {
       event.preventDefault();
 
       const name = document.getElementById('form-name').value.trim();
       const whatsapp = document.getElementById('form-whatsapp').value.replace(/\D/g, '');
       const store = document.getElementById('form-store').value.trim();
+      const cnpj = document.getElementById('form-cnpj').value.trim();
       const storeType = document.querySelector('input[name="store-type"]:checked').value;
       const notes = document.getElementById('cart-notes')?.value?.trim() || '';
 
@@ -1129,7 +1319,8 @@
           name,
           whatsapp: `55${whatsapp}`,
           storeType,
-          store
+          store,
+          cnpj
         },
         items: cart.map(item => ({
           code: item.code,
