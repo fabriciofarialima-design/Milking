@@ -44,9 +44,7 @@
     input:focus, textarea:focus, select:focus { transition: border-color 0.15s ease, box-shadow 0.15s ease; }
     @keyframes cartPop { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
     .cart-pop { animation: cartPop 0.3s cubic-bezier(.22,1,.36,1); }
-    #bottom-cart-bar { transform: translateY(100%); transition: transform 0.35s cubic-bezier(.22,1,.36,1); }
-    #bottom-cart-bar.visible { transform: translateY(0); }
-    #bar-items::-webkit-scrollbar { display: none; }
+
     @media (prefers-reduced-motion: reduce) {
       .card-product, .fade-in, .cart-pop { animation: none !important; transition: none !important; }
     }
@@ -414,34 +412,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   </div>
 
-  <!-- ========== BARRA CARRINHO BOTTOM ========== -->
-  <div id="bottom-cart-bar" class="fixed bottom-0 inset-x-0 z-50 bg-white border-t border-surface-200 shadow-[0_-4px_24px_rgba(6,59,91,0.10)]">
-    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-3">
-      <!-- Esquerda: contagem -->
-      <button onclick="showScreen('cart')" class="flex items-center gap-2 shrink-0">
-        <div class="relative">
-          <svg class="w-5 h-5 text-brand-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
-          <span id="bar-badge" class="absolute -top-2 -right-2.5 bg-brand-600 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">0</span>
-        </div>
-        <span id="bar-count" class="text-sm font-bold text-gray-800 hidden sm:inline">0 itens</span>
-      </button>
-
-      <!-- Separador -->
-      <div class="w-px h-6 bg-surface-200 shrink-0"></div>
-
-      <!-- Centro: itens -->
-      <div id="bar-items" class="flex-1 min-w-0 overflow-x-auto flex items-center gap-1.5 scrollbar-none" style="-ms-overflow-style:none;scrollbar-width:none;">
-        <!-- Renderizado via JS -->
-      </div>
-
-      <!-- Direita: CTA -->
-      <button onclick="showScreen('cart')" class="shrink-0 bg-brand-600 text-white text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-brand-700 active:scale-[0.98] transition-all shadow-md shadow-brand-600/20">
-        <span class="hidden sm:inline">Solicitar Orçamento</span>
-        <span class="sm:hidden">Orçamento</span>
-      </button>
-    </div>
-  </div>
-
   <!-- ========== DRAWER CESTA: DESKTOP ========== -->
   <div id="cart-drawer-overlay" class="hidden fixed inset-0 bg-black/30 z-50" onclick="closeCartDrawer()"></div>
   <aside id="cart-drawer" class="fixed top-0 right-0 h-full w-96 bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out hidden flex-col">
@@ -555,14 +525,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       // Fechar autocomplete ao trocar tela
       document.getElementById('autocomplete-list').classList.add('hidden');
-
-      // Barra bottom só visível na tela de catálogo
-      const bottomBar = document.getElementById('bottom-cart-bar');
-      if (name === 'catalog' && cart.length > 0) {
-        bottomBar.classList.add('visible');
-      } else {
-        bottomBar.classList.remove('visible');
-      }
 
       if (name === 'cart') renderCart();
       if (name === 'form') renderFormSummary();
@@ -1095,8 +1057,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       // Feedback visual no badge do carrinho
       const badge = document.getElementById('cart-badge');
       if (badge) { badge.classList.remove('cart-pop'); void badge.offsetWidth; badge.classList.add('cart-pop'); }
-      const barBadge = document.getElementById('bar-badge');
-      if (barBadge) { barBadge.classList.remove('cart-pop'); void barBadge.offsetWidth; barBadge.classList.add('cart-pop'); }
+      const fabBadge = document.getElementById('fab-badge');
+      if (fabBadge) { fabBadge.classList.remove('cart-pop'); void fabBadge.offsetWidth; fabBadge.classList.add('cart-pop'); }
+
+      // Desktop: abrir drawer ao adicionar item
+      if (isDesktop()) openCartDrawer();
     }
 
     function updateQty(code, delta) {
@@ -1120,54 +1085,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     function updateCartUI() {
       const count = cart.reduce((sum, item) => sum + item.qty, 0);
       const badge = document.getElementById('cart-badge');
+      const fabBadge = document.getElementById('fab-badge');
+      const fab = document.getElementById('fab-cart');
       const navBtn = document.getElementById('nav-cart-btn');
-      const bottomBar = document.getElementById('bottom-cart-bar');
-      const catalog = document.getElementById('screen-catalog');
 
       if (count > 0) {
         badge.textContent = count;
         badge.classList.remove('hidden');
+        fabBadge.textContent = count;
+        fab.classList.remove('hidden');
+        fab.classList.add('flex');
         navBtn.disabled = false;
         navBtn.classList.remove('opacity-50', 'cursor-not-allowed');
         navBtn.classList.add('hover:bg-brand-600');
         document.getElementById('nav-cart-tooltip').classList.add('hidden');
-
-        // Bottom bar
-        bottomBar.classList.add('visible');
-        catalog.classList.add('pb-24');
-        renderBottomBar();
       } else {
         badge.classList.add('hidden');
+        fab.classList.add('hidden');
+        fab.classList.remove('flex');
         navBtn.disabled = true;
         navBtn.classList.add('opacity-50', 'cursor-not-allowed');
         navBtn.classList.remove('hover:bg-brand-600');
         document.getElementById('nav-cart-tooltip').classList.remove('hidden');
-
-        // Bottom bar
-        bottomBar.classList.remove('visible');
-        catalog.classList.remove('pb-24');
       }
-
-      // FAB fica sempre escondido (substituído pela barra bottom)
-      document.getElementById('fab-cart').classList.add('hidden');
-      document.getElementById('fab-cart').classList.remove('flex');
-    }
-
-    function renderBottomBar() {
-      const barBadge = document.getElementById('bar-badge');
-      const barCount = document.getElementById('bar-count');
-      const barItems = document.getElementById('bar-items');
-      const count = cart.reduce((sum, item) => sum + item.qty, 0);
-
-      barBadge.textContent = count;
-      barCount.textContent = `${count} ${count === 1 ? 'item' : 'itens'}`;
-
-      barItems.innerHTML = cart.map(item => `
-        <span class="inline-flex items-center gap-1 bg-surface-100 text-gray-700 text-xs font-medium px-2.5 py-1 rounded-lg whitespace-nowrap shrink-0">
-          ${item.name.length > 20 ? item.name.substring(0, 20) + '…' : item.name}
-          <span class="text-brand-600 font-bold">${item.qty}x</span>
-        </span>
-      `).join('');
     }
 
     function renderCart() {
