@@ -72,7 +72,7 @@
       </div>
 
       <!-- Info do cliente -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 p-4 bg-gray-50 rounded-xl">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 p-4 bg-gray-50 rounded-xl">
         <div>
           <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Cliente</p>
           <p id="customer-name" class="text-sm font-semibold text-gray-800"></p>
@@ -84,6 +84,14 @@
         <div>
           <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Loja</p>
           <p id="customer-store" class="text-sm text-gray-700"></p>
+        </div>
+        <div id="customer-city-wrapper">
+          <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Cidade / Região</p>
+          <p id="customer-city" class="text-sm text-gray-700"></p>
+        </div>
+        <div id="customer-cnpj-wrapper">
+          <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">CNPJ</p>
+          <p id="customer-cnpj" class="text-sm text-gray-700"></p>
         </div>
       </div>
 
@@ -152,8 +160,21 @@
       const customerName = decodeURIComponent(parts[1]);
       const whatsapp = parts[2];
       const store = decodeURIComponent(parts[3]);
-      const timestamp = parts[4];
-      const itemsRaw = parts.slice(5).join(sep);
+      // Formatos: antigo (6 parts), com city (7), com city+cnpj (8+)
+      let city = '', cnpj = '', timestamp, itemsRaw;
+      if (parts.length >= 8) {
+        city = decodeURIComponent(parts[4]);
+        cnpj = decodeURIComponent(parts[5]);
+        timestamp = parts[6];
+        itemsRaw = parts.slice(7).join(sep);
+      } else if (parts.length >= 7) {
+        city = decodeURIComponent(parts[4]);
+        timestamp = parts[5];
+        itemsRaw = parts.slice(6).join(sep);
+      } else {
+        timestamp = parts[4];
+        itemsRaw = parts.slice(5).join(sep);
+      }
 
       const items = itemsRaw.split(',').map(pair => {
         const [code, qty] = pair.split(':');
@@ -170,7 +191,7 @@
 
       if (items.length === 0) return null;
 
-      return { quoteCode, customerName, whatsapp, store, timestamp, items };
+      return { quoteCode, customerName, whatsapp, store, city, cnpj, timestamp, items };
     }
 
     function formatWhatsApp(number) {
@@ -197,15 +218,35 @@
       document.getElementById('customer-name').textContent = data.customerName;
       document.getElementById('customer-whatsapp').textContent = formatWhatsApp(data.whatsapp);
       document.getElementById('customer-store').textContent = data.store;
+      if (data.city) {
+        document.getElementById('customer-city').textContent = data.city;
+      } else {
+        document.getElementById('customer-city-wrapper').style.display = 'none';
+      }
+      if (data.cnpj) {
+        document.getElementById('customer-cnpj').textContent = data.cnpj;
+      } else {
+        document.getElementById('customer-cnpj-wrapper').style.display = 'none';
+      }
 
       // Tabela desktop
       const tbody = document.getElementById('items-table');
       const imgBase = 'https://pedidook.s3-sa-east-1.amazonaws.com/656/produto/foto_';
-      const imgFallback = `onerror="this.onerror=null;this.parentElement.innerHTML='<svg class=\\'w-6 h-6 text-gray-300\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'1\\' viewBox=\\'0 0 24 24\\'><path stroke-linecap=\\'round\\' stroke-linejoin=\\'round\\' d=\\'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4\\'/></svg>'"`;
+      const imgFallbackSvg = '<svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>';
+
+      function imgError(el) {
+        var src = el.src;
+        if (src.endsWith('.jpeg')) {
+          el.src = src.replace(/\.jpeg$/, '.jpg');
+        } else {
+          el.onerror = null;
+          el.parentElement.innerHTML = imgFallbackSvg;
+        }
+      }
 
       tbody.innerHTML = data.items.map((item, i) =>
         `<tr class="${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}">
-          <td class="py-2 px-3"><div class="w-12 h-12 rounded border border-gray-200 flex items-center justify-center overflow-hidden bg-white">${item.imageId ? `<img src="${imgBase}${item.imageId}.jpg" alt="" class="w-full h-full object-contain" loading="lazy" ${imgFallback}>` : '<svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>'}</div></td>
+          <td class="py-2 px-3"><div class="w-12 h-12 rounded border border-gray-200 flex items-center justify-center overflow-hidden bg-white">${item.imageId ? `<img src="${imgBase}${item.imageId}.jpeg" alt="" class="w-full h-full object-contain" loading="lazy" onerror="imgError(this)">` : imgFallbackSvg}</div></td>
           <td class="py-2.5 px-3 font-mono text-brand-700 font-semibold">${item.code}</td>
           <td class="py-2.5 px-3 text-gray-800">${item.name}</td>
           <td class="py-2.5 px-3 text-gray-500">${item.package}</td>
@@ -217,7 +258,7 @@
       const cards = document.getElementById('items-cards');
       cards.innerHTML = data.items.map(item =>
         `<div class="bg-gray-50 rounded-xl p-4 flex gap-3">
-          <div class="w-14 h-14 rounded border border-gray-200 flex items-center justify-center overflow-hidden bg-white shrink-0">${item.imageId ? `<img src="${imgBase}${item.imageId}.jpg" alt="" class="w-full h-full object-contain" loading="lazy" ${imgFallback}>` : '<svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>'}</div>
+          <div class="w-14 h-14 rounded border border-gray-200 flex items-center justify-center overflow-hidden bg-white shrink-0">${item.imageId ? `<img src="${imgBase}${item.imageId}.jpeg" alt="" class="w-full h-full object-contain" loading="lazy" onerror="imgError(this)">` : imgFallbackSvg}</div>
           <div class="flex-1 min-w-0">
             <div class="flex items-start justify-between mb-1">
               <span class="text-xs font-mono text-brand-600 font-semibold bg-brand-50 px-2 py-0.5 rounded">Cód. ${item.code}</span>

@@ -342,14 +342,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
 
       <form id="quote-form" onsubmit="submitQuote(event)" class="space-y-4 mb-6">
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Nome *</label>
-          <input type="text" id="form-name" required class="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 outline-none transition-all" placeholder="Seu nome">
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">WhatsApp *</label>
-          <input type="tel" id="form-whatsapp" required class="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 outline-none transition-all" placeholder="(00) 00000-0000" oninput="maskWhatsApp(this)">
-        </div>
+        <input type="hidden" id="form-name" value="">
+        <input type="hidden" id="form-city" value="">
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de estabelecimento *</label>
           <div class="flex gap-4 mb-2">
@@ -365,14 +359,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div id="produtor-warning" class="hidden bg-amber-50 border border-amber-300 rounded-lg p-3 mb-2 text-sm text-amber-800">
             <strong>Atenção:</strong> No momento, os pedidos são exclusivos para revendas. Se você é produtor e deseja conhecer nossos produtos, entre em contato pelo WhatsApp.
           </div>
-          <div id="store-field-wrapper">
-            <label id="form-store-label" class="block text-sm font-medium text-gray-700 mb-1">Nome da Revenda *</label>
-            <input type="text" id="form-store" required class="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 outline-none transition-all" placeholder="Nome da sua revenda">
-          </div>
+        </div>
+        <div id="store-field-wrapper">
+          <label id="form-store-label" class="block text-sm font-medium text-gray-700 mb-1">Nome da Revenda *</label>
+          <input type="text" id="form-store" required class="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 outline-none transition-all" placeholder="Nome da sua revenda">
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Cidade / Região *</label>
-          <input type="text" id="form-city" required class="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 outline-none transition-all" placeholder="Ex: Uberlândia - MG">
+          <label class="block text-sm font-medium text-gray-700 mb-1">WhatsApp *</label>
+          <input type="tel" id="form-whatsapp" required class="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 outline-none transition-all" placeholder="(00) 00000-0000" oninput="maskWhatsApp(this)">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">CNPJ</label>
@@ -463,9 +457,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     // CONFIGURAÇÃO
     // ==============================
     const WEBHOOK_URL = "https://n8n-production-46a60.up.railway.app/webhook/milking-orcamento";
+    const SITE_URL = "https://fabriciofarialima-design.github.io/Milking";
     const WHATSAPP_NUMBER = "5534998991588";
     const COOKIE_NAME = "milking_cart";
     const COOKIE_DAYS = 30;
+    const IMG_BASE = "https://pedidook.s3-sa-east-1.amazonaws.com/656/produto/foto_";
+    const IMG_FALLBACK_SVG = '<svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>';
+
+    function imgError(el) {
+      const src = el.src;
+      if (src.endsWith('.jpeg')) {
+        el.src = src.replace(/\.jpeg$/, '.jpg');
+      } else {
+        el.onerror = null;
+        el.parentElement.innerHTML = IMG_FALLBACK_SVG;
+      }
+    }
 
     function generateQuoteCode() {
       const now = new Date();
@@ -606,7 +613,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       container.innerHTML = cart.map(item => `
         <div class="bg-gray-50 rounded-lg p-3 flex items-center gap-3">
           <div class="w-14 h-14 bg-white rounded-lg overflow-hidden shrink-0 flex items-center justify-center border border-gray-200">
-            <img src="${item.image || `https://pedidook.s3-sa-east-1.amazonaws.com/656/produto/foto_${item.id}.jpg`}" alt="${item.name}" class="w-full h-full object-contain" loading="lazy" onerror="this.onerror=null;this.parentElement.innerHTML='<svg class=\\'w-6 h-6 text-gray-300\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'1\\' viewBox=\\'0 0 24 24\\'><path stroke-linecap=\\'round\\' stroke-linejoin=\\'round\\' d=\\'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4\\'/></svg>'">
+            <img src="${item.image || `${IMG_BASE}${item.id}.jpeg`}" alt="${item.name}" class="w-full h-full object-contain" loading="lazy" onerror="imgError(this)">
           </div>
           <div class="flex-1 min-w-0">
             <h4 class="text-sm font-semibold text-gray-800 truncate">${item.name}</h4>
@@ -666,10 +673,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
 
     function getBrandsWithCount() {
-      const brands = [...new Set(PRODUCTS.map(p => p.brand || '(sem marca)'))].sort();
+      const brands = [...new Set(PRODUCTS.map(p => p.brand).filter(b => b))].sort();
       return brands.map(b => ({
         name: b,
-        count: PRODUCTS.filter(p => (p.brand || '(sem marca)') === b).length
+        count: PRODUCTS.filter(p => p.brand === b).length
       }));
     }
 
@@ -858,7 +865,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     function getFilteredProducts() {
       return PRODUCTS.filter(p => {
         const catMatch = currentCategory === 'todos' || p.category === currentCategory;
-        const brandMatch = currentBrand === 'todos' || (p.brand || '(sem marca)') === currentBrand;
+        const brandMatch = currentBrand === 'todos' || p.brand === currentBrand;
         const searchMatch = matchesSearch(p, searchTerm);
         return catMatch && brandMatch && searchMatch;
       });
@@ -894,11 +901,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         return `
           <div class="card-product bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
             <div class="bg-gradient-to-b from-surface-50 to-surface-100 aspect-square flex items-center justify-center overflow-hidden p-3">
-              <img src="${p.image || `https://pedidook.s3-sa-east-1.amazonaws.com/656/produto/foto_${p.id}.jpg`}"
+              <img src="${p.image || `${IMG_BASE}${p.id}.jpeg`}"
                    alt="${p.name}"
                    class="w-full h-full object-contain mix-blend-multiply"
                    loading="lazy"
-                   onerror="this.onerror=null;this.parentElement.innerHTML='<svg class=\\'w-12 h-12 text-gray-300\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'1\\' viewBox=\\'0 0 24 24\\'><path stroke-linecap=\\'round\\' stroke-linejoin=\\'round\\' d=\\'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4\\'/></svg>'">
+                   onerror="imgError(this)">
             </div>
             <div class="p-3 flex flex-col flex-1">
               <span class="text-[11px] text-gray-400 mb-1 font-medium">Cód. ${p.code}${p.reference ? ' | Ref. ' + p.reference : ''}</span>
@@ -1017,7 +1024,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       if (product) {
         document.getElementById('search-input').value = product.name;
         searchTerm = product.name;
+        currentCategory = 'todos';
+        currentBrand = 'todos';
+        currentPage = 1;
         document.getElementById('autocomplete-list').classList.add('hidden');
+        updateFilterHash();
+        renderSidebarList();
         renderProducts();
       }
     }
@@ -1144,7 +1156,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       container.innerHTML = cart.map(item => `
         <div class="bg-white rounded-lg border border-gray-200 p-4 flex items-center gap-3">
           <div class="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden shrink-0 flex items-center justify-center border border-gray-200">
-            <img src="${item.image || `https://pedidook.s3-sa-east-1.amazonaws.com/656/produto/foto_${item.id}.jpg`}" alt="${item.name}" class="w-full h-full object-contain" loading="lazy" onerror="this.onerror=null;this.parentElement.innerHTML='<svg class=\\'w-7 h-7 text-gray-300\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'1\\' viewBox=\\'0 0 24 24\\'><path stroke-linecap=\\'round\\' stroke-linejoin=\\'round\\' d=\\'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4\\'/></svg>'">
+            <img src="${item.image || `${IMG_BASE}${item.id}.jpeg`}" alt="${item.name}" class="w-full h-full object-contain" loading="lazy" onerror="imgError(this)">
           </div>
           <div class="flex-1 min-w-0">
             <h4 class="text-sm font-semibold text-gray-800 truncate">${item.name}</h4>
@@ -1183,7 +1195,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       container.innerHTML = cart.map(item =>
         `<div class="flex items-center gap-3 py-1">
-          <img src="${item.image || `https://pedidook.s3-sa-east-1.amazonaws.com/656/produto/foto_${item.id}.jpg`}" alt="${item.name}" class="w-10 h-10 object-cover rounded border border-gray-200 shrink-0">
+          <img src="${item.image || `${IMG_BASE}${item.id}.jpeg`}" alt="${item.name}" class="w-10 h-10 object-cover rounded border border-gray-200 shrink-0" onerror="imgError(this)">
           <div class="flex justify-between flex-1 min-w-0">
             <span class="truncate">${item.qty}x ${item.name}</span>
             <span class="text-gray-400 shrink-0 ml-2">${item.package}</span>
@@ -1246,17 +1258,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     async function submitQuote(event) {
       event.preventDefault();
 
-      const name = document.getElementById('form-name').value.trim();
-      const whatsapp = document.getElementById('form-whatsapp').value.replace(/\D/g, '');
       const store = document.getElementById('form-store').value.trim();
-      const city = document.getElementById('form-city').value.trim();
+      const whatsapp = document.getElementById('form-whatsapp').value.replace(/\D/g, '');
       const cnpj = document.getElementById('form-cnpj').value.trim();
       const storeType = document.querySelector('input[name="store-type"]:checked').value;
       const notes = document.getElementById('cart-notes')?.value?.trim() || '';
+      const name = store;
+      const city = '';
 
       if (storeType === 'produtor') return;
 
-      if (!name || !whatsapp || whatsapp.length < 10 || !store || !city) {
+      if (!whatsapp || whatsapp.length < 10 || !store) {
         alert('Preencha todos os campos obrigatórios.');
         return;
       }
@@ -1266,8 +1278,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       // Gerar URL da página de visualização do pedido
       const itemsStr = cart.map(i => `${i.code}:${i.qty}`).join(',');
       const timestamp = new Date().toISOString();
-      const baseUrl = new URL('pedido.html', window.location.href).href;
-      const orderUrl = `${baseUrl}#${quoteCode}~${encodeURIComponent(name)}~55${whatsapp}~${encodeURIComponent(store)}~${encodeURIComponent(city)}~${encodeURIComponent(cnpj)}~${timestamp}~${itemsStr}`;
+      const orderUrl = `${SITE_URL}/pedido.html#${quoteCode}~${encodeURIComponent(name)}~55${whatsapp}~${encodeURIComponent(store)}~${encodeURIComponent(city)}~${encodeURIComponent(cnpj)}~${timestamp}~${itemsStr}`;
+      const orderLink = `[Ver pedido](${orderUrl})`;
 
       const payload = {
         quoteCode,
@@ -1290,7 +1302,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         notes,
         itemCount: cart.reduce((sum, item) => sum + item.qty, 0),
         source: "website",
-        orderUrl
+        orderUrl,
+        orderLink
       };
 
       const btn = document.getElementById('submit-btn');
