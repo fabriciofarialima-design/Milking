@@ -132,14 +132,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <img src="assets/Background-hero.webp" alt="" class="w-full h-full object-cover" loading="eager" width="3546" height="1322" fetchpriority="high">
           <div class="absolute inset-0 bg-brand-900/70"></div>
         </div>
-        <div class="relative max-w-5xl mx-auto px-4 py-12 sm:py-16 lg:py-20">
+        <div class="relative max-w-5xl mx-auto px-4 py-8 sm:py-16 lg:py-20">
           <div class="max-w-2xl">
             <div class="flex items-center gap-2 mb-5">
               <span class="w-8 h-[2px] bg-brand-500"></span>
               <span class="text-brand-100/80 text-xs font-semibold tracking-widest uppercase">Milking Liners</span>
             </div>
             <h1 class="text-3xl sm:text-4xl lg:text-[2.75rem] font-extrabold leading-[1.15] mb-4 tracking-tight">A distribuidora das revendas<br>de ordenha do Brasil.</h1>
-            <p class="text-base sm:text-lg text-surface-300 mb-8 leading-relaxed max-w-lg">Ampla variedade de equipamentos e peças de reposição para ordenha.</p>
+            <p class="text-base sm:text-lg text-surface-300 mb-6 sm:mb-8 leading-relaxed max-w-lg">Ampla variedade de equipamentos e peças de reposição para ordenha.</p>
             <div class="flex flex-wrap items-center gap-6">
               <a href="#catalogo" class="inline-flex items-center gap-2 bg-white text-brand-800 font-bold px-7 py-3 rounded-xl shadow-lg hover:shadow-xl hover:bg-surface-50 transition-all text-sm">
                 Ver Produtos
@@ -156,7 +156,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       <!-- 4 Destaques -->
       <section class="bg-white border-b border-surface-200">
-        <div class="max-w-5xl mx-auto px-4 py-5 flex flex-wrap items-center justify-between gap-y-3 gap-x-6 sm:gap-x-0">
+        <div class="max-w-5xl mx-auto px-4 py-3 sm:py-5 flex flex-wrap items-center justify-between gap-y-2 gap-x-6 sm:gap-x-0">
 
           <div class="flex items-center gap-3 w-[calc(50%-12px)] sm:w-auto">
             <svg aria-hidden="true" class="w-5 h-5 text-brand-600 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
@@ -203,10 +203,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <!-- ========== CATÁLOGO ========== -->
       <div id="catalogo" class="max-w-5xl mx-auto px-4 py-4">
 
-      <!-- Mensagem institucional -->
-      <div class="bg-gradient-to-r from-brand-50 to-blue-50 border border-brand-100 rounded-xl p-4 mb-5 text-sm text-brand-800 flex items-start gap-3">
+      <!-- Mensagem institucional (dismissível) -->
+      <div id="info-banner" class="bg-gradient-to-r from-brand-50 to-blue-50 border border-brand-100 rounded-xl p-4 mb-5 text-sm text-brand-800 flex items-start gap-3">
         <svg aria-hidden="true" class="w-5 h-5 text-brand-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        <span>Monte sua lista de produtos e envie para cotação. <strong>Nosso time comercial entrará em contato pelo WhatsApp para fechar o pedido com os melhores valores.</strong></span>
+        <span class="flex-1">Monte sua lista de produtos e envie para cotação. <strong>Nosso time comercial entrará em contato pelo WhatsApp para fechar o pedido com os melhores valores.</strong></span>
+        <button onclick="dismissInfoBanner()" class="text-brand-400 hover:text-brand-600 shrink-0 p-0.5 transition-colors" aria-label="Fechar">
+          <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
       </div>
 
       <!-- Busca com autocomplete -->
@@ -231,9 +234,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div id="autocomplete-list" class="hidden absolute z-40 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg autocomplete-list"></div>
       </div>
 
+      <!-- Filtros mobile -->
+      <div class="flex items-center gap-2 mb-3 lg:hidden">
+        <svg aria-hidden="true" class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+        <span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Filtrar por</span>
+      </div>
+      <!-- Chips de filtro ativo -->
+      <div id="active-filters" class="hidden flex-wrap gap-2 mb-3 lg:hidden"></div>
+
       <!-- Filtro por categoria: MOBILE -->
-      <div class="mb-4 lg:hidden">
-        <button id="mobile-cat-toggle" onclick="toggleMobileCategories()" class="w-full flex items-center justify-between bg-white border border-gray-300 rounded-lg px-3 py-3 text-sm text-gray-700">
+      <div class="mb-3 lg:hidden">
+        <button id="mobile-cat-toggle" onclick="toggleMobileCategories()" class="w-full flex items-center justify-between bg-white border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-gray-700">
           <span id="mobile-cat-label">Todas as categorias</span>
           <svg aria-hidden="true" class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
         </button>
@@ -257,8 +268,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
 
       <!-- Filtro por marca: MOBILE -->
-      <div class="mb-4 lg:hidden">
-        <button id="mobile-brand-toggle" onclick="toggleMobileBrands()" class="w-full flex items-center justify-between bg-white border border-gray-300 rounded-lg px-3 py-3 text-sm text-gray-700">
+      <div class="mb-3 lg:hidden">
+        <button id="mobile-brand-toggle" onclick="toggleMobileBrands()" class="w-full flex items-center justify-between bg-white border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-gray-700">
           <span id="mobile-brand-label">Todas as marcas</span>
           <svg aria-hidden="true" class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
         </button>
@@ -313,7 +324,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <!-- Coluna de produtos -->
         <div class="flex-1 min-w-0">
           <!-- Contador de resultados -->
-          <div id="results-count" class="text-xs text-gray-400 mb-2"></div>
+          <div id="results-count" class="text-sm font-medium text-gray-500 mb-3"></div>
 
           <!-- Grid de produtos -->
           <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -388,12 +399,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <span>Nosso time comercial entrará em contato pelo <strong>WhatsApp</strong> informado abaixo para fechar o pedido com os valores.</span>
       </div>
 
-      <form id="quote-form" onsubmit="submitQuote(event)" class="space-y-4 mb-6">
+      <form id="quote-form" onsubmit="submitQuote(event)" class="mb-6">
         <input type="hidden" id="form-name" value="">
         <input type="hidden" id="form-city" value="">
 
         <!-- Resumo do pedido -->
-        <div class="bg-gray-50 border border-gray-100 rounded-xl p-4">
+        <div class="bg-gray-50 border border-gray-100 rounded-xl p-4 mb-6">
           <div class="flex items-center justify-between mb-2">
             <h3 class="text-sm font-bold text-gray-700" id="form-summary-title">Resumo do orçamento</h3>
             <button onclick="showScreen('cart')" class="text-xs text-brand-600 font-medium hover:text-brand-800 transition-colors">Editar</button>
@@ -404,9 +415,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div id="form-notes-display" class="hidden mt-2 pt-2 border-t border-gray-200 text-sm text-gray-500 italic"></div>
         </div>
 
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de estabelecimento *</label>
-          <div class="flex gap-4 mb-2">
+        <div class="mb-5">
+          <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de estabelecimento *</label>
+          <div class="flex gap-4">
             <label class="flex items-center gap-2 cursor-pointer">
               <input type="radio" name="store-type" value="revenda" checked onchange="updateStoreLabel()" class="w-4 h-4 text-brand-600 focus:ring-brand-500">
               <span class="text-sm text-gray-700">Revenda</span>
@@ -424,27 +435,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </a>
           </div>
         </div>
-        <div id="revenda-fields">
+        <div id="revenda-fields" class="mt-5 space-y-5">
           <div id="store-field-wrapper">
             <label id="form-store-label" class="block text-sm font-medium text-gray-700 mb-1">Nome da Revenda *</label>
             <input type="text" id="form-store" required class="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 outline-none transition-all" placeholder="Nome da sua revenda">
           </div>
-          <div class="mt-4">
+          <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">WhatsApp *</label>
             <input type="tel" id="form-whatsapp" required class="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 outline-none transition-all" placeholder="(00) 00000-0000" oninput="maskWhatsApp(this)">
           </div>
-          <div class="mt-4">
+          <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">CNPJ</label>
             <input type="text" id="form-cnpj" class="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 outline-none transition-all" placeholder="00.000.000/0000-00" oninput="maskCNPJ(this)" maxlength="18">
           </div>
         </div>
 
-        <div id="form-error" class="hidden bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-700 flex items-center gap-2" role="alert" aria-live="assertive">
+        <div id="form-error" class="hidden mt-5 bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-700 flex items-center gap-2" role="alert" aria-live="assertive">
           <svg aria-hidden="true" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           <span id="form-error-text"></span>
         </div>
 
-        <button type="submit" id="submit-btn" class="group w-full bg-gradient-to-r from-brand-600 to-brand-700 text-white font-bold py-4 rounded-xl hover:from-brand-700 hover:to-brand-800 active:scale-[0.99] transition-all shadow-lg shadow-brand-700/25 flex items-center justify-center gap-2.5 text-base">
+        <button type="submit" id="submit-btn" class="mt-6 group w-full bg-gradient-to-r from-brand-600 to-brand-700 text-white font-bold py-4 rounded-xl hover:from-brand-700 hover:to-brand-800 active:scale-[0.99] transition-all shadow-lg shadow-brand-700/25 flex items-center justify-center gap-2.5 text-base">
           Enviar Solicitação
           <svg aria-hidden="true" class="w-5 h-5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
         </button>
@@ -470,6 +481,50 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </button>
       </div>
     </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer id="site-footer" class="bg-brand-900 text-white/70 text-sm mt-8">
+      <div class="max-w-5xl mx-auto px-4 py-8 sm:py-10">
+        <div class="flex flex-col sm:flex-row sm:items-start gap-8 sm:gap-12">
+          <!-- Coluna 1: Marca -->
+          <div class="sm:flex-1">
+            <img src="Logo-milking-liners.svg" alt="Milking Liners" class="h-8 mb-3 brightness-0 invert opacity-80">
+            <p class="text-xs leading-relaxed max-w-xs">Distribuidora especializada em equipamentos e peças de reposição para ordenha mecânica.</p>
+          </div>
+          <!-- Coluna 2: Contato -->
+          <div class="sm:flex-1">
+            <h4 class="text-white font-bold text-sm mb-3">Contato</h4>
+            <ul class="space-y-2 text-xs">
+              <li class="flex items-center gap-2">
+                <svg aria-hidden="true" class="w-4 h-4 shrink-0 opacity-60" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                <a href="https://wa.me/5534998991588" target="_blank" class="hover:text-white transition-colors">(34) 99899-1588</a>
+              </li>
+              <li class="flex items-center gap-2">
+                <svg aria-hidden="true" class="w-4 h-4 shrink-0 opacity-60" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                <a href="mailto:contato@milkingliners.com.br" class="hover:text-white transition-colors">contato@milkingliners.com.br</a>
+              </li>
+              <li class="flex items-start gap-2">
+                <svg aria-hidden="true" class="w-4 h-4 shrink-0 opacity-60 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <span>Uberlândia, MG — Brasil</span>
+              </li>
+            </ul>
+          </div>
+          <!-- Coluna 3: Horário -->
+          <div class="sm:flex-1">
+            <h4 class="text-white font-bold text-sm mb-3">Atendimento</h4>
+            <ul class="space-y-1 text-xs">
+              <li>Seg a Sex: 8h às 18h</li>
+              <li>Sáb: 8h às 12h</li>
+            </ul>
+          </div>
+        </div>
+        <!-- Linha divisória + Copyright -->
+        <div class="border-t border-white/10 mt-8 pt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <p class="text-xs text-white/40">© 2025 Milking Liners. Todos os direitos reservados.</p>
+          <p class="text-xs text-white/40">CNPJ: 00.000.000/0000-00</p>
+        </div>
+      </div>
+    </footer>
 
   </div>
 
@@ -614,6 +669,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         fab.classList.add('hidden');
         fab.classList.remove('flex');
       }
+
+      // Footer visível apenas no catálogo e sucesso
+      const footer = document.getElementById('site-footer');
+      if (footer) footer.style.display = (name === 'catalog' || name === 'success') ? '' : 'none';
 
       if (name === 'cart') renderCart();
       if (name === 'form') { summaryExpanded = false; renderFormSummary(); }
@@ -1006,7 +1065,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       renderMobileBrandList();
       renderProducts();
       updateFilterHash();
+      updateActiveFilters();
     }
+
+    function setCategory(cat) { filterCategory(cat); }
 
     function filterBrand(brand) {
       currentBrand = brand;
@@ -1020,7 +1082,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       renderMobileBrandList();
       renderProducts();
       updateFilterHash();
+      updateActiveFilters();
     }
+
+    function setBrand(brand) { filterBrand(brand); }
 
     function matchesSearch(product, term) {
       if (!term) return true;
@@ -1587,6 +1652,75 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
 
     // ==============================
+    // ==============================
+    // INFO BANNER DISMISS
+    // ==============================
+    function dismissInfoBanner() {
+      const banner = document.getElementById('info-banner');
+      if (banner) {
+        banner.style.transition = 'opacity 0.2s ease, max-height 0.3s ease, margin 0.3s ease, padding 0.3s ease';
+        banner.style.opacity = '0';
+        banner.style.maxHeight = '0';
+        banner.style.marginBottom = '0';
+        banner.style.paddingTop = '0';
+        banner.style.paddingBottom = '0';
+        banner.style.overflow = 'hidden';
+        setTimeout(() => banner.remove(), 300);
+        try { localStorage.setItem('milking_info_dismissed', '1'); } catch(e) {}
+      }
+    }
+    // Esconder se já foi fechado antes
+    (function() {
+      try {
+        if (localStorage.getItem('milking_info_dismissed') === '1') {
+          const b = document.getElementById('info-banner');
+          if (b) b.remove();
+        }
+      } catch(e) {}
+    })();
+
+    // ==============================
+    // BACK TO TOP
+    // ==============================
+    (function() {
+      const btn = document.getElementById('back-to-top');
+      if (!btn) return;
+      let visible = false;
+      window.addEventListener('scroll', () => {
+        const show = window.scrollY > 600;
+        if (show === visible) return;
+        visible = show;
+        btn.style.opacity = show ? '1' : '0';
+        btn.style.pointerEvents = show ? 'auto' : 'none';
+        btn.style.transform = show ? 'translateY(0)' : 'translateY(1rem)';
+      }, { passive: true });
+    })();
+
+    // ==============================
+    // FILTROS ATIVOS (chips mobile)
+    // ==============================
+    function updateActiveFilters() {
+      const container = document.getElementById('active-filters');
+      if (!container) return;
+      const chips = [];
+      if (currentCategory !== 'todos') {
+        chips.push(`<span class="inline-flex items-center gap-1 bg-brand-100 text-brand-800 text-xs font-medium px-2.5 py-1 rounded-lg">${currentCategory}<button onclick="setCategory('todos')" class="hover:text-brand-600 ml-0.5">&times;</button></span>`);
+      }
+      if (currentBrand !== 'todos') {
+        chips.push(`<span class="inline-flex items-center gap-1 bg-brand-100 text-brand-800 text-xs font-medium px-2.5 py-1 rounded-lg">${currentBrand}<button onclick="setBrand('todos')" class="hover:text-brand-600 ml-0.5">&times;</button></span>`);
+      }
+      if (chips.length) {
+        container.innerHTML = chips.join('');
+        container.classList.remove('hidden');
+        container.classList.add('flex');
+      } else {
+        container.innerHTML = '';
+        container.classList.add('hidden');
+        container.classList.remove('flex');
+      }
+    }
+
+    // ==============================
     // INICIALIZAÇÃO
     // ==============================
     function init() {
@@ -1594,6 +1728,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       renderCategorySelect();
       renderProducts();
       updateCartUI();
+      updateActiveFilters();
     }
 
     init();
@@ -1613,6 +1748,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     gtag('js', new Date());
     gtag('config', 'G-8D35L811FS');
   </script>
+
+  <!-- Botão voltar ao topo -->
+  <button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Voltar ao topo" style="position:fixed;bottom:5rem;right:1.25rem;z-index:39;width:2.5rem;height:2.5rem;border-radius:0.75rem;background:#fff;border:1px solid #dde4ed;box-shadow:0 4px 12px rgba(0,0,0,0.08);display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;pointer-events:none;transition:opacity 0.3s ease,transform 0.3s ease;transform:translateY(1rem);">
+    <svg aria-hidden="true" style="width:1.25rem;height:1.25rem;color:#6b7280;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
+  </button>
 
   <!-- Toast Undo -->
   <div id="undo-toast" role="alert" aria-live="polite" style="position:fixed;bottom:5rem;left:50%;transform:translateX(-50%) translateY(5rem);z-index:60;opacity:0;pointer-events:none;transition:opacity 0.3s ease, transform 0.3s ease;background:#063b5b;color:#fff;font-size:0.875rem;border-radius:0.75rem;padding:0.75rem 1rem;box-shadow:0 10px 25px -5px rgba(6,59,91,0.35);display:flex;align-items:center;gap:0.625rem;max-width:calc(100vw - 2rem);">
