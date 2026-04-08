@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://milkingliners.com.br/sitemap.xml

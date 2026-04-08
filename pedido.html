@@ -33,7 +33,8 @@
       theme: {
         extend: {
           colors: {
-            brand: { 50: '#e8f2fb', 100: '#c5dff3', 500: '#2a88cc', 600: '#0d71b9', 700: '#0a5e9a', 800: '#084a7a', 900: '#063b5b' }
+            brand: { 50: '#e8f2fb', 100: '#c5dff3', 500: '#2a88cc', 600: '#0d71b9', 700: '#0a5e9a', 800: '#084a7a', 900: '#063b5b' },
+            surface: { 50: '#f7f9fc', 100: '#eef2f7', 200: '#dde4ed', 300: '#c4cfdc' }
           }
         }
       }
@@ -81,11 +82,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
         <div class="flex gap-2 no-print">
           <button onclick="copyLink()" class="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium px-4 py-2 rounded-lg transition-colors">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+            <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
             <span id="copy-btn-text">Copiar Link</span>
           </button>
           <button onclick="shareOrder()" id="share-btn" class="hidden items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+            <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
             Compartilhar
           </button>
         </div>
@@ -144,7 +145,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- Botão de impressão -->
     <div class="text-center mt-6 no-print">
       <button onclick="window.print()" class="inline-flex items-center gap-2 text-gray-500 hover:text-gray-700 text-sm transition-colors">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+        <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
         Imprimir
       </button>
     </div>
@@ -154,7 +155,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <main id="error-content" class="hidden max-w-md mx-auto px-4 py-16 text-center fade-in">
     <div class="bg-white rounded-2xl shadow-lg p-8">
       <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
-        <svg class="w-8 h-8 text-red-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
+        <svg aria-hidden="true" class="w-8 h-8 text-red-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
       </div>
       <h2 class="text-lg font-bold text-gray-800 mb-2">Link inválido</h2>
       <p class="text-gray-500 text-sm mb-6">Este link de pedido não é válido ou está incompleto.</p>
@@ -168,6 +169,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <script src="products.js"></script>
 
   <script>
+    const PRODUCT_MAP = new Map(PRODUCTS.map(p => [p.code, p]));
+
     function parseHash() {
       const hash = window.location.hash.substring(1);
       if (!hash) return null;
@@ -199,7 +202,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const items = itemsRaw.split(',').map(pair => {
         const [code, qty] = pair.split(':');
         if (!code || !qty) return null;
-        const product = PRODUCTS.find(p => p.code === code);
+        const product = PRODUCT_MAP.get(code);
         return {
           code,
           qty: parseInt(qty, 10),
@@ -252,7 +255,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       // Tabela desktop
       const tbody = document.getElementById('items-table');
       const imgBase = 'https://pedidook.s3-sa-east-1.amazonaws.com/656/produto/foto_';
-      const imgFallbackSvg = '<svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>';
+      const imgFallbackSvg = '<svg aria-hidden="true" class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>';
 
       function imgError(el) {
         var src = el.src;
@@ -266,7 +269,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       tbody.innerHTML = data.items.map((item, i) =>
         `<tr class="${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}">
-          <td class="py-2 px-3"><div class="w-12 h-12 rounded border border-gray-200 flex items-center justify-center overflow-hidden bg-white">${item.imageId ? `<img src="${imgBase}${item.imageId}.jpeg" alt="" class="w-full h-full object-contain" loading="lazy" onerror="imgError(this)">` : imgFallbackSvg}</div></td>
+          <td class="py-2 px-3"><div class="w-12 h-12 rounded border border-gray-200 flex items-center justify-center overflow-hidden bg-white">${item.imageId ? `<img src="${imgBase}${item.imageId}.jpeg" alt="${item.name}" class="w-full h-full object-contain" loading="lazy" onerror="imgError(this)">` : imgFallbackSvg}</div></td>
           <td class="py-2.5 px-3 font-mono text-brand-700 font-semibold">${item.code}</td>
           <td class="py-2.5 px-3 text-gray-800">${item.name}</td>
           <td class="py-2.5 px-3 text-gray-500">${item.package}</td>
@@ -278,7 +281,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const cards = document.getElementById('items-cards');
       cards.innerHTML = data.items.map(item =>
         `<div class="bg-gray-50 rounded-xl p-4 flex gap-3">
-          <div class="w-14 h-14 rounded border border-gray-200 flex items-center justify-center overflow-hidden bg-white shrink-0">${item.imageId ? `<img src="${imgBase}${item.imageId}.jpeg" alt="" class="w-full h-full object-contain" loading="lazy" onerror="imgError(this)">` : imgFallbackSvg}</div>
+          <div class="w-14 h-14 rounded border border-gray-200 flex items-center justify-center overflow-hidden bg-white shrink-0">${item.imageId ? `<img src="${imgBase}${item.imageId}.jpeg" alt="${item.name}" class="w-full h-full object-contain" loading="lazy" onerror="imgError(this)">` : imgFallbackSvg}</div>
           <div class="flex-1 min-w-0">
             <div class="flex items-start justify-between mb-1">
               <span class="text-xs font-mono text-brand-600 font-semibold bg-brand-50 px-2 py-0.5 rounded">Cód. ${item.code}</span>

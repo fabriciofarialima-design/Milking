@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -38,7 +38,9 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
+  <link rel="preload" href="Logo-milking-liners.svg" as="image">
+  <link rel="preload" href="assets/Background-hero.webp" as="image">
   <style>
     html { scroll-behavior: smooth; }
     body { font-family: 'DM Sans', system-ui, sans-serif; }
@@ -70,6 +72,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- ============================================ -->
   <div id="app">
 
+    <!-- Skip to content -->
+    <a href="#catalogo" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bg-brand-600 focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:text-sm focus:font-semibold">Pular para o catálogo</a>
+
     <!-- ========== HEADER ========== -->
     <header class="bg-brand-900/95 backdrop-blur-md text-white sticky top-0 z-50 shadow-lg border-b border-white/5">
       <div class="max-w-5xl mx-auto px-4 py-3.5 flex items-center justify-between">
@@ -82,7 +87,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             Sua lista está vazia
             <span class="absolute -top-1 right-4 w-2 h-2 bg-gray-800 rotate-45"></span>
           </span>
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+          <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
           <span class="text-sm font-medium hidden sm:inline">Meu orçamento</span>
           <span id="cart-badge" class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
         </button>
@@ -109,10 +114,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="flex flex-wrap items-center gap-6">
               <a href="#catalogo" class="inline-flex items-center gap-2 bg-white text-brand-800 font-bold px-7 py-3 rounded-xl shadow-lg hover:shadow-xl hover:bg-surface-50 transition-all text-sm">
                 Ver Produtos
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
               </a>
               <a href="https://wa.me/5534998991588?text=Vim%20do%20site%20da%20Milking%20Liners%20e%20quero%20falar%20com%20representante%20de%20vendas." target="_blank" class="inline-flex items-center gap-2 text-white/80 hover:text-white font-medium text-sm transition-colors">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                <svg aria-hidden="true" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                 Falar com vendedor
               </a>
             </div>
@@ -125,7 +130,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="max-w-5xl mx-auto px-4 py-5 flex flex-wrap items-center justify-between gap-y-3 gap-x-6 sm:gap-x-0">
 
           <div class="flex items-center gap-3 w-[calc(50%-12px)] sm:w-auto">
-            <svg class="w-5 h-5 text-brand-600 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+            <svg aria-hidden="true" class="w-5 h-5 text-brand-600 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
             <div>
               <p class="text-sm font-bold text-gray-800 leading-tight">Linha Completa</p>
               <p class="text-[11px] text-gray-500">Todas as etapas da ordenha</p>
@@ -135,7 +140,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="hidden sm:block w-px h-8 bg-surface-200"></div>
 
           <div class="flex items-center gap-3 w-[calc(50%-12px)] sm:w-auto">
-            <svg class="w-5 h-5 text-amber-500 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            <svg aria-hidden="true" class="w-5 h-5 text-amber-500 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
             <div>
               <p class="text-sm font-bold text-gray-800 leading-tight">Entrega Rápida</p>
               <p class="text-[11px] text-gray-500">Antes de 12h, sai no mesmo dia*</p>
@@ -145,7 +150,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="hidden sm:block w-px h-8 bg-surface-200"></div>
 
           <div class="flex items-center gap-3 w-[calc(50%-12px)] sm:w-auto">
-            <svg class="w-5 h-5 text-emerald-500 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 17h8M8 17a2 2 0 11-4 0m4 0a2 2 0 10-4 0m12 0a2 2 0 11-4 0m4 0a2 2 0 10-4 0M3 9h1l1.5-4.5A1 1 0 016.44 4h5.12a1 1 0 01.95.68L14 9h5a2 2 0 012 2v4a1 1 0 01-1 1h-1"/></svg>
+            <svg aria-hidden="true" class="w-5 h-5 text-emerald-500 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 17h8M8 17a2 2 0 11-4 0m4 0a2 2 0 10-4 0m12 0a2 2 0 11-4 0m4 0a2 2 0 10-4 0M3 9h1l1.5-4.5A1 1 0 016.44 4h5.12a1 1 0 01.95.68L14 9h5a2 2 0 012 2v4a1 1 0 01-1 1h-1"/></svg>
             <div>
               <p class="text-sm font-bold text-gray-800 leading-tight">Frete Grátis</p>
               <p class="text-[11px] text-gray-500">Acima de R$ 1.000</p>
@@ -155,7 +160,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="hidden sm:block w-px h-8 bg-surface-200"></div>
 
           <div class="flex items-center gap-3 w-[calc(50%-12px)] sm:w-auto">
-            <svg class="w-5 h-5 text-brand-600 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            <svg aria-hidden="true" class="w-5 h-5 text-brand-600 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
             <div>
               <p class="text-sm font-bold text-gray-800 leading-tight">Pedido pelo WhatsApp</p>
               <p class="text-[11px] text-gray-500">Monte sua lista e envie</p>
@@ -171,14 +176,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       <!-- Mensagem institucional -->
       <div class="bg-gradient-to-r from-brand-50 to-blue-50 border border-brand-100 rounded-xl p-4 mb-5 text-sm text-brand-800 flex items-start gap-3">
-        <svg class="w-5 h-5 text-brand-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <svg aria-hidden="true" class="w-5 h-5 text-brand-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         <span>Monte sua lista de produtos e envie para cotação. <strong>Nosso time comercial entrará em contato pelo WhatsApp para fechar o pedido com os melhores valores.</strong></span>
       </div>
 
       <!-- Busca com autocomplete -->
       <div class="relative mb-5">
         <div class="flex items-center bg-white border border-gray-200 rounded-xl shadow-sm focus-within:ring-2 focus-within:ring-brand-500/30 focus-within:border-brand-500 transition-all">
-          <svg class="w-5 h-5 text-gray-400 ml-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <svg aria-hidden="true" class="w-5 h-5 text-gray-400 ml-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <label for="search-input" class="sr-only">Buscar produto</label>
           <input
             id="search-input"
             type="text"
@@ -189,7 +195,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             onfocus="onSearchInput(this.value)"
           >
           <button id="search-clear" class="hidden px-3 text-gray-400 hover:text-gray-600" onclick="clearSearch()">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
           </button>
         </div>
         <!-- Autocomplete dropdown -->
@@ -200,12 +206,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="mb-4 lg:hidden">
         <button id="mobile-cat-toggle" onclick="toggleMobileCategories()" class="w-full flex items-center justify-between bg-white border border-gray-300 rounded-lg px-3 py-3 text-sm text-gray-700">
           <span id="mobile-cat-label">Todas as categorias</span>
-          <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          <svg aria-hidden="true" class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
         </button>
         <div id="mobile-cat-panel" class="hidden mt-1 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
           <div class="p-2 border-b border-gray-200">
             <div class="flex items-center bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
-              <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              <svg aria-hidden="true" class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
               <input
                 id="mobile-category-search"
                 type="text"
@@ -225,12 +231,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="mb-4 lg:hidden">
         <button id="mobile-brand-toggle" onclick="toggleMobileBrands()" class="w-full flex items-center justify-between bg-white border border-gray-300 rounded-lg px-3 py-3 text-sm text-gray-700">
           <span id="mobile-brand-label">Todas as marcas</span>
-          <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          <svg aria-hidden="true" class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
         </button>
         <div id="mobile-brand-panel" class="hidden mt-1 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
           <div class="p-2 border-b border-gray-200">
             <div class="flex items-center bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
-              <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              <svg aria-hidden="true" class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
               <input
                 id="mobile-brand-search"
                 type="text"
@@ -259,7 +265,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <!-- Busca -->
             <div class="p-3 border-b border-gray-200">
               <div class="flex items-center bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
-                <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <svg aria-hidden="true" class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                 <input
                   id="sidebar-search"
                   type="text"
@@ -287,7 +293,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
           <!-- Sem resultados -->
           <div id="no-results" class="hidden text-center py-12 text-gray-500">
-            <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <svg aria-hidden="true" class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
             <p class="text-sm">Nenhum produto encontrado</p>
           </div>
         </div>
@@ -296,7 +302,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       <!-- CTA Float: Meu Orçamento -->
       <button id="fab-cart" onclick="showScreen('cart')" class="hidden fixed bottom-5 right-5 z-40 bg-brand-600 text-white rounded-xl shadow-xl shadow-brand-600/25 items-center gap-2.5 px-5 py-3 hover:bg-brand-700 active:scale-[0.97] transition-all">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
         <span class="text-sm font-bold">Meu Orçamento</span>
         <span id="fab-badge" class="bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
       </button>
@@ -306,14 +312,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- ========== TELA 2: CESTA DE ORÇAMENTO ========== -->
     <main id="screen-cart" class="hidden max-w-5xl mx-auto px-4 py-4">
       <button onclick="showScreen('catalog')" class="flex items-center gap-1 text-brand-700 text-sm font-medium mb-4 hover:underline">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
         Voltar ao catálogo
       </button>
 
       <h2 class="text-2xl font-extrabold text-gray-800 mb-4">Cesta de Orçamento</h2>
 
       <div id="cart-empty" class="hidden text-center py-12 text-gray-500">
-        <svg class="w-16 h-16 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        <svg aria-hidden="true" class="w-16 h-16 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
         <p class="text-sm mb-2">Sua cesta está vazia</p>
         <button onclick="showScreen('catalog')" class="text-brand-600 font-medium text-sm hover:underline">Adicionar produtos</button>
       </div>
@@ -339,14 +345,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- ========== TELA 3: FORMULÁRIO DE ENVIO ========== -->
     <main id="screen-form" class="hidden max-w-5xl mx-auto px-4 py-4">
       <button onclick="showScreen('catalog')" class="flex items-center gap-1 text-brand-700 text-sm font-medium mb-4 hover:underline">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
         Adicionar mais produtos
       </button>
 
       <h2 class="text-2xl font-extrabold text-gray-800 mb-4">Enviar Solicitação de Orçamento</h2>
 
       <div class="bg-gradient-to-r from-brand-50 to-blue-50 border border-brand-100 rounded-xl p-4 mb-5 text-sm text-brand-800 flex items-start gap-3">
-        <svg class="w-5 h-5 text-brand-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+        <svg aria-hidden="true" class="w-5 h-5 text-brand-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
         <span>Nosso time comercial entrará em contato pelo <strong>WhatsApp</strong> informado abaixo para fechar o pedido com os valores.</span>
       </div>
 
@@ -391,9 +397,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div id="form-notes-display" class="hidden mt-2 pt-2 border-t border-gray-200 text-sm text-gray-500 italic"></div>
         </div>
 
+        <div id="form-error" class="hidden bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-700 flex items-center gap-2" role="alert" aria-live="assertive">
+          <svg aria-hidden="true" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span id="form-error-text"></span>
+        </div>
+
         <button type="submit" id="submit-btn" class="group w-full bg-gradient-to-r from-brand-600 to-brand-700 text-white font-bold py-4 rounded-xl hover:from-brand-700 hover:to-brand-800 active:scale-[0.99] transition-all shadow-lg shadow-brand-700/25 flex items-center justify-center gap-2.5 text-base">
           Enviar Solicitação
-          <svg class="w-5 h-5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          <svg aria-hidden="true" class="w-5 h-5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
         </button>
       </form>
     </main>
@@ -402,14 +413,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <main id="screen-success" class="hidden max-w-5xl mx-auto px-4 py-16 text-center fade-in">
       <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 sm:p-10 max-w-md mx-auto">
         <div class="w-20 h-20 bg-gradient-to-br from-emerald-100 to-emerald-50 rounded-full flex items-center justify-center mx-auto mb-5">
-          <svg class="w-10 h-10 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+          <svg aria-hidden="true" class="w-10 h-10 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
         </div>
         <h2 class="text-2xl font-extrabold text-gray-800 mb-2">Orçamento Enviado!</h2>
         <p class="text-sm text-gray-500 mb-1">Seu código de orçamento:</p>
         <p id="success-quote-code" class="text-2xl font-bold text-brand-600 mb-4 font-mono"></p>
         <p class="text-gray-600 text-sm mb-6">Nosso time comercial entrará em contato para apresentar os valores e fechar o pedido. Você também pode falar diretamente com um vendedor:</p>
         <a id="success-whatsapp-link" href="#" target="_blank" class="inline-flex items-center justify-center gap-2 bg-[#25D366] text-white font-semibold px-6 py-3 rounded-lg hover:bg-[#1da851] transition-colors w-full mb-3">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           Falar com vendedor
         </a>
 <button onclick="startNewQuote()" class="text-brand-600 font-medium text-sm hover:underline">
@@ -422,18 +433,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <!-- ========== DRAWER CESTA: DESKTOP ========== -->
   <div id="cart-drawer-overlay" class="hidden fixed inset-0 bg-black/30 z-50" onclick="closeCartDrawer()"></div>
-  <aside id="cart-drawer" class="fixed top-0 right-0 h-full w-96 bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out hidden flex-col">
+  <aside id="cart-drawer" role="dialog" aria-label="Cesta de orçamento" class="fixed top-0 right-0 h-full w-96 max-w-[calc(100vw-2rem)] bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out hidden flex-col">
     <!-- Header -->
     <div class="flex items-center justify-between px-4 py-4 border-b border-gray-200 bg-gray-50">
       <h2 class="text-lg font-bold text-gray-800">Meu Orçamento</h2>
       <button onclick="closeCartDrawer()" class="p-1 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-200 transition-colors">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
     <!-- Conteúdo -->
     <div class="flex-1 overflow-y-auto px-4 py-4">
       <div id="drawer-cart-empty" class="hidden text-center py-8 text-gray-500">
-        <svg class="w-12 h-12 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        <svg aria-hidden="true" class="w-12 h-12 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
         <p class="text-sm">Sua cesta está vazia</p>
       </div>
       <div id="drawer-cart-items" class="space-y-3">
@@ -462,6 +473,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- JAVASCRIPT -->
   <!-- ============================================ -->
   <script>
+    // Mapa indexado por código para lookup O(1)
+    const PRODUCT_MAP = new Map(PRODUCTS.map(p => [p.code, p]));
     // ==============================
     // CONFIGURAÇÃO
     // ==============================
@@ -471,7 +484,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     const COOKIE_NAME = "milking_cart";
     const COOKIE_DAYS = 30;
     const IMG_BASE = "https://pedidook.s3-sa-east-1.amazonaws.com/656/produto/foto_";
-    const IMG_FALLBACK_SVG = '<svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>';
+    const IMG_FALLBACK_SVG = '<svg aria-hidden="true" class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>';
 
     function imgError(el) {
       const src = el.src;
@@ -564,7 +577,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     // ==============================
     // DRAWER DESKTOP
     // ==============================
+    let _drawerFocusTrap = null;
+    let _drawerTrigger = null;
+
     function openCartDrawer() {
+      _drawerTrigger = document.activeElement;
       const drawer = document.getElementById('cart-drawer');
       const overlay = document.getElementById('cart-drawer-overlay');
       drawer.classList.remove('hidden');
@@ -575,6 +592,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       drawer.classList.remove('translate-x-full');
       document.body.classList.add('overflow-hidden');
       renderDrawerCart();
+      // Focus trap: focar no drawer e prender Tab
+      const closeBtn = drawer.querySelector('button');
+      if (closeBtn) closeBtn.focus();
+      _drawerFocusTrap = function(e) {
+        if (e.key === 'Escape') { closeCartDrawer(); return; }
+        if (e.key !== 'Tab') return;
+        const focusable = drawer.querySelectorAll('button:not([disabled]), input, textarea, select, a[href], [tabindex]:not([tabindex="-1"])');
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      };
+      document.addEventListener('keydown', _drawerFocusTrap);
     }
 
     function closeCartDrawer() {
@@ -582,11 +613,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const overlay = document.getElementById('cart-drawer-overlay');
       drawer.classList.add('translate-x-full');
       document.body.classList.remove('overflow-hidden');
+      if (_drawerFocusTrap) { document.removeEventListener('keydown', _drawerFocusTrap); _drawerFocusTrap = null; }
       setTimeout(() => {
         drawer.classList.add('hidden');
         drawer.classList.remove('flex');
         overlay.classList.add('hidden');
       }, 300);
+      if (_drawerTrigger) { _drawerTrigger.focus(); _drawerTrigger = null; }
     }
 
     function goToFormFromDrawer() {
@@ -629,12 +662,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p class="text-xs text-gray-400">Cód. ${item.code} | Emb.: ${item.package}</p>
           </div>
           <div class="flex items-center gap-1 shrink-0">
-            <button onclick="updateQtyDrawer('${item.code}', -1)" class="w-7 h-7 flex items-center justify-center border border-gray-300 rounded text-gray-600 hover:bg-white font-bold text-sm">-</button>
+            <button onclick="updateQtyDrawer('${item.code}', -1)" class="w-9 h-9 flex items-center justify-center border border-gray-300 rounded text-gray-600 hover:bg-white font-bold text-sm">-</button>
             <span class="w-7 text-center text-sm font-semibold">${item.qty}</span>
-            <button onclick="updateQtyDrawer('${item.code}', 1)" class="w-7 h-7 flex items-center justify-center border border-gray-300 rounded text-gray-600 hover:bg-white font-bold text-sm">+</button>
+            <button onclick="updateQtyDrawer('${item.code}', 1)" class="w-9 h-9 flex items-center justify-center border border-gray-300 rounded text-gray-600 hover:bg-white font-bold text-sm">+</button>
           </div>
           <button onclick="removeFromDrawer('${item.code}')" class="text-red-400 hover:text-red-600 p-1" title="Remover">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
           </button>
         </div>
       `).join('');
@@ -924,9 +957,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               <div class="mt-auto">
                 ${inCart
                   ? `<div class="flex items-center justify-between bg-brand-50 rounded-xl px-2 py-1.5">
-                      <button onclick="updateQty('${p.code}', -1)" class="w-8 h-8 flex items-center justify-center text-brand-700 font-bold text-lg rounded-lg hover:bg-brand-100 transition-colors">-</button>
+                      <button onclick="updateQty('${p.code}', -1)" class="w-10 h-10 flex items-center justify-center text-brand-700 font-bold text-lg rounded-lg hover:bg-brand-100 transition-colors">-</button>
                       <span class="text-sm font-bold text-brand-800">${inCart.qty}</span>
-                      <button onclick="updateQty('${p.code}', 1)" class="w-8 h-8 flex items-center justify-center text-brand-700 font-bold text-lg rounded-lg hover:bg-brand-100 transition-colors">+</button>
+                      <button onclick="updateQty('${p.code}', 1)" class="w-10 h-10 flex items-center justify-center text-brand-700 font-bold text-lg rounded-lg hover:bg-brand-100 transition-colors">+</button>
                     </div>`
                   : `<button onclick="addToCart('${p.code}')" class="w-full bg-brand-600 text-white text-sm font-semibold py-2.5 rounded-xl hover:bg-brand-700 active:scale-[0.98] transition-all">Adicionar</button>`
                 }
@@ -1017,7 +1050,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               <div class="text-sm font-medium text-gray-800 truncate">${p.name}${aliasText}</div>
               <div class="text-xs text-gray-400">Cód. ${p.code} | ${p.category}</div>
             </div>
-            <svg class="w-4 h-4 text-gray-300 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+            <svg aria-hidden="true" class="w-4 h-4 text-gray-300 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
           </button>
         `;
       }).join('');
@@ -1029,7 +1062,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
 
     function selectProduct(code) {
-      const product = PRODUCTS.find(p => p.code === code);
+      const product = PRODUCT_MAP.get(code);
       if (product) {
         document.getElementById('search-input').value = product.name;
         searchTerm = product.name;
@@ -1070,7 +1103,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     // CARRINHO
     // ==============================
     function addToCart(code) {
-      const product = PRODUCTS.find(p => p.code === code);
+      const product = PRODUCT_MAP.get(code);
       if (!product) return;
 
       const wasEmpty = cart.length === 0;
@@ -1135,6 +1168,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         navBtn.disabled = false;
         navBtn.classList.remove('opacity-50', 'cursor-not-allowed');
         navBtn.classList.add('hover:bg-brand-600');
+        navBtn.setAttribute('aria-label', `Ver orçamento (${count} ${count === 1 ? 'item' : 'itens'})`);
+        fab.setAttribute('aria-label', `Meu orçamento (${count} ${count === 1 ? 'item' : 'itens'})`);
         document.getElementById('nav-cart-tooltip').classList.add('hidden');
       } else {
         badge.classList.add('hidden');
@@ -1143,6 +1178,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         navBtn.disabled = true;
         navBtn.classList.add('opacity-50', 'cursor-not-allowed');
         navBtn.classList.remove('hover:bg-brand-600');
+        navBtn.setAttribute('aria-label', 'Ver orçamento (vazio)');
         document.getElementById('nav-cart-tooltip').classList.remove('hidden');
       }
     }
@@ -1172,12 +1208,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p class="text-xs text-gray-400">Cód. ${item.code}${item.reference ? ' | Ref. ' + item.reference : ''} | Emb.: ${item.package}</p>
           </div>
           <div class="flex items-center gap-2 shrink-0">
-            <button onclick="updateQtyCart('${item.code}', -1)" class="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 font-bold">-</button>
+            <button onclick="updateQtyCart('${item.code}', -1)" class="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 font-bold">-</button>
             <span class="w-8 text-center text-sm font-semibold">${item.qty}</span>
-            <button onclick="updateQtyCart('${item.code}', 1)" class="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 font-bold">+</button>
+            <button onclick="updateQtyCart('${item.code}', 1)" class="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 font-bold">+</button>
           </div>
           <button onclick="removeFromCart('${item.code}')" class="text-red-400 hover:text-red-600 p-1" title="Remover">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
           </button>
         </div>
       `).join('');
@@ -1245,6 +1281,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
     }
 
+    function showFormError(msg) {
+      const el = document.getElementById('form-error');
+      document.getElementById('form-error-text').textContent = msg;
+      el.classList.remove('hidden');
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function hideFormError() {
+      document.getElementById('form-error').classList.add('hidden');
+    }
+
     function maskWhatsApp(input) {
       let v = input.value.replace(/\D/g, '');
       if (v.length > 11) v = v.slice(0, 11);
@@ -1262,10 +1309,46 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       else if (v.length > 5) v = v.replace(/^(\d{2})(\d{3})(\d{1,3})/, '$1.$2.$3');
       else if (v.length > 2) v = v.replace(/^(\d{2})(\d{1,3})/, '$1.$2');
       input.value = v;
+
+      // Limpar erro enquanto digita
+      const el = input;
+      if (v.length < 14) {
+        el.classList.remove('border-red-400', 'border-green-400');
+        el.classList.add('border-gray-200');
+      } else if (validarCNPJ(v)) {
+        el.classList.remove('border-gray-200', 'border-red-400');
+        el.classList.add('border-green-400');
+      } else {
+        el.classList.remove('border-gray-200', 'border-green-400');
+        el.classList.add('border-red-400');
+      }
+    }
+
+    function validarCNPJ(cnpj) {
+      cnpj = cnpj.replace(/\D/g, '');
+      if (cnpj.length !== 14) return false;
+      // Rejeitar CNPJs com todos os dígitos iguais
+      if (/^(\d)\1{13}$/.test(cnpj)) return false;
+
+      const calc = (digits, weights) =>
+        digits.reduce((sum, d, i) => sum + d * weights[i], 0);
+
+      const digits = cnpj.split('').map(Number);
+      const w1 = [5,4,3,2,9,8,7,6,5,4,3,2];
+      const w2 = [6,5,4,3,2,9,8,7,6,5,4,3,2];
+
+      let rest = calc(digits.slice(0,12), w1) % 11;
+      const d1 = rest < 2 ? 0 : 11 - rest;
+      if (digits[12] !== d1) return false;
+
+      rest = calc(digits.slice(0,13), w2) % 11;
+      const d2 = rest < 2 ? 0 : 11 - rest;
+      return digits[13] === d2;
     }
 
     async function submitQuote(event) {
       event.preventDefault();
+      hideFormError();
 
       const store = document.getElementById('form-store').value.trim();
       const whatsapp = document.getElementById('form-whatsapp').value.replace(/\D/g, '');
@@ -1278,7 +1361,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       if (storeType === 'produtor') return;
 
       if (!whatsapp || whatsapp.length < 10 || !store) {
-        alert('Preencha todos os campos obrigatórios.');
+        showFormError('Preencha todos os campos obrigatórios.');
+        return;
+      }
+
+      if (cnpj && !validarCNPJ(cnpj)) {
+        showFormError('CNPJ inválido. Verifique os números digitados.');
         return;
       }
 
@@ -1317,10 +1405,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       const btn = document.getElementById('submit-btn');
       btn.disabled = true;
-      btn.innerHTML = `<svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg> Enviando...`;
-
-      // Log no console para testes
-      console.log("📦 Payload do orçamento:", JSON.stringify(payload, null, 2));
+      btn.innerHTML = `<svg aria-hidden="true" class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg> Enviando...`;
 
       try {
         if (WEBHOOK_URL) {
@@ -1329,11 +1414,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
           });
-        } else {
-          console.warn("⚠️ WEBHOOK_URL não configurada. Configure no topo do arquivo index.html.");
         }
       } catch (err) {
-        console.error("Erro ao enviar webhook:", err);
+        // Silencioso em produção — webhook failure não deve bloquear UX
       }
 
       // Limpar carrinho
@@ -1351,7 +1434,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       // Mostrar sucesso
       btn.disabled = false;
-      btn.innerHTML = `Enviar Solicitação <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>`;
+      btn.innerHTML = `Enviar Solicitação <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>`;
       showScreen('success');
     }
 
