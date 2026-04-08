@@ -40,13 +40,122 @@
       body { background: white !important; }
       .print-full { max-width: 100% !important; box-shadow: none !important; }
     }
+    /* Estilos específicos para o conteúdo do PDF */
+    #pdf-content {
+      display: none;
+      font-family: 'Helvetica', 'Arial', sans-serif;
+      color: #1f2937;
+      background: white;
+    }
+    #pdf-content .pdf-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 32px;
+      border-bottom: 3px solid #063b5b;
+      margin-bottom: 20px;
+    }
+    #pdf-content .pdf-header img { height: 36px; }
+    #pdf-content .pdf-header .pdf-title {
+      text-align: right;
+    }
+    #pdf-content .pdf-header .pdf-title h1 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #063b5b;
+      margin: 0;
+    }
+    #pdf-content .pdf-header .pdf-title p {
+      font-size: 11px;
+      color: #6b7280;
+      margin: 2px 0 0;
+    }
+    #pdf-content .pdf-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 16px 24px;
+      background: #f7f9fc;
+      border-radius: 8px;
+      margin: 0 24px 20px;
+    }
+    #pdf-content .pdf-info .info-item {
+      flex: 1 1 140px;
+      min-width: 140px;
+    }
+    #pdf-content .pdf-info .info-label {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #9ca3af;
+      margin: 0 0 2px;
+    }
+    #pdf-content .pdf-info .info-value {
+      font-size: 12px;
+      font-weight: 600;
+      color: #1f2937;
+      margin: 0;
+    }
+    #pdf-content table {
+      width: calc(100% - 48px);
+      margin: 0 24px;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+    #pdf-content table thead th {
+      text-align: left;
+      padding: 8px 10px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      border-bottom: 2px solid #063b5b;
+    }
+    #pdf-content table tbody td {
+      padding: 7px 10px;
+      border-bottom: 1px solid #e5e7eb;
+      vertical-align: middle;
+    }
+    #pdf-content table tbody tr:nth-child(even) {
+      background: #f9fafb;
+    }
+    #pdf-content .td-code {
+      font-family: 'Courier New', monospace;
+      font-weight: 700;
+      color: #0a5e9a;
+    }
+    #pdf-content .td-qty {
+      text-align: center;
+      font-weight: 700;
+    }
+    #pdf-content .pdf-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      margin-top: 16px;
+      border-top: 1px solid #e5e7eb;
+    }
+    #pdf-content .pdf-total {
+      font-size: 13px;
+      color: #374151;
+    }
+    #pdf-content .pdf-total strong {
+      color: #063b5b;
+      font-size: 15px;
+    }
+    #pdf-content .pdf-stamp {
+      font-size: 9px;
+      color: #9ca3af;
+      text-align: right;
+    }
   </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M75FTZKF"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
 
   <!-- HEADER -->
   <header class="bg-brand-900 text-white shadow-md">
@@ -58,7 +167,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </header>
 
-  <!-- CONTEÚDO -->
+  <!-- CONTEÚDO VISÍVEL -->
   <main id="order-content" class="hidden max-w-4xl mx-auto px-4 py-8 fade-in">
     <div class="bg-white rounded-2xl shadow-lg p-6 sm:p-8 print-full">
 
@@ -70,11 +179,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <p id="quote-date" class="text-xs text-gray-400 mt-1"></p>
         </div>
         <div class="flex gap-2 no-print">
-          <button onclick="copyLink()" class="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium px-4 py-2 rounded-lg transition-colors">
-            <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-            <span id="copy-btn-text">Copiar Link</span>
+          <button onclick="downloadPDF()" id="pdf-btn" class="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors">
+            <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span id="pdf-btn-text">Baixar PDF</span>
           </button>
-          <button onclick="shareOrder()" id="share-btn" class="hidden items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
+          <button onclick="sharePDF()" id="share-btn" class="hidden items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium px-4 py-2.5 rounded-lg transition-colors">
             <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
             Compartilhar
           </button>
@@ -110,7 +219,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <table class="w-full text-sm">
           <thead>
             <tr class="border-b-2 border-brand-100 text-left">
-              <th class="py-3 px-3 text-gray-500 font-semibold w-16"></th>
               <th class="py-3 px-3 text-gray-500 font-semibold w-20">Cód.</th>
               <th class="py-3 px-3 text-gray-500 font-semibold">Produto</th>
               <th class="py-3 px-3 text-gray-500 font-semibold w-32">Embalagem</th>
@@ -130,15 +238,40 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
 
     </div>
-
-    <!-- Botão de impressão -->
-    <div class="text-center mt-6 no-print">
-      <button onclick="window.print()" class="inline-flex items-center gap-2 text-gray-500 hover:text-gray-700 text-sm transition-colors">
-        <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-        Imprimir
-      </button>
-    </div>
   </main>
+
+  <!-- CONTEÚDO OCULTO PARA PDF (layout A4 otimizado) -->
+  <div id="pdf-content">
+    <div class="pdf-header">
+      <img src="Logo-milking-liners.svg" alt="Milking Liners">
+      <div class="pdf-title">
+        <h1 id="pdf-quote-code"></h1>
+        <p id="pdf-quote-date"></p>
+      </div>
+    </div>
+
+    <div class="pdf-info" id="pdf-info"></div>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width:60px">Cód.</th>
+          <th>Produto</th>
+          <th style="width:120px">Embalagem</th>
+          <th style="width:50px;text-align:center">Qtd</th>
+        </tr>
+      </thead>
+      <tbody id="pdf-items-table"></tbody>
+    </table>
+
+    <div class="pdf-footer">
+      <div class="pdf-total">Total: <strong id="pdf-total-items"></strong> itens</div>
+      <div class="pdf-stamp">
+        Milking Distribuidora &bull; milkingliners.com.br<br>
+        WhatsApp: (34) 9 9899-1588
+      </div>
+    </div>
+  </div>
 
   <!-- ESTADO DE ERRO -->
   <main id="error-content" class="hidden max-w-md mx-auto px-4 py-16 text-center fade-in">
@@ -156,6 +289,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <!-- Dados dos produtos -->
   <script src="products.js"></script>
+  <!-- html2pdf.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js" defer></script>
 
   <script>
     const PRODUCT_MAP = new Map(PRODUCTS.map(p => [p.code, p]));
@@ -172,7 +307,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const customerName = decodeURIComponent(parts[1]);
       const whatsapp = parts[2];
       const store = decodeURIComponent(parts[3]);
-      // Formatos: antigo (6 parts), com city (7), com city+cnpj (8+)
       let city = '', cnpj = '', timestamp, itemsRaw;
       if (parts.length >= 8) {
         city = decodeURIComponent(parts[4]);
@@ -202,28 +336,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }).filter(Boolean);
 
       if (items.length === 0) return null;
-
       return { quoteCode, customerName, whatsapp, store, city, cnpj, timestamp, items };
     }
 
     function formatWhatsApp(number) {
-      // 5534999999999 → (34) 99999-9999
       if (number.length === 13) {
         return `(${number.slice(2, 4)}) ${number.slice(4, 9)}-${number.slice(9)}`;
       }
       return number;
     }
 
+    let orderData = null;
+
     function render(data) {
+      orderData = data;
       document.title = `Pedido ${data.quoteCode} — Milking Distribuidora`;
 
       document.getElementById('quote-code').textContent = data.quoteCode;
 
-      // Formatar data/hora
+      let dateStr = '', timeStr = '';
       if (data.timestamp) {
         const d = new Date(data.timestamp);
-        const dateStr = d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        const timeStr = d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        dateStr = d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        timeStr = d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
         document.getElementById('quote-date').textContent = `${dateStr} às ${timeStr}`;
       }
 
@@ -241,24 +376,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         document.getElementById('customer-cnpj-wrapper').style.display = 'none';
       }
 
-      // Tabela desktop
+      // Tabela desktop (sem imagens — mais limpo e leve)
       const tbody = document.getElementById('items-table');
-      const imgBase = 'https://pedidook.s3-sa-east-1.amazonaws.com/656/produto/foto_';
-      const imgFallbackSvg = '<svg aria-hidden="true" class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>';
-
-      function imgError(el) {
-        var src = el.src;
-        if (src.endsWith('.jpeg')) {
-          el.src = src.replace(/\.jpeg$/, '.jpg');
-        } else {
-          el.onerror = null;
-          el.parentElement.innerHTML = imgFallbackSvg;
-        }
-      }
-
       tbody.innerHTML = data.items.map((item, i) =>
         `<tr class="${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}">
-          <td class="py-2 px-3"><div class="w-12 h-12 rounded border border-gray-200 flex items-center justify-center overflow-hidden bg-white">${item.imageId ? `<img src="${imgBase}${item.imageId}.jpeg" alt="${item.name}" class="w-full h-full object-contain" loading="lazy" onerror="imgError(this)">` : imgFallbackSvg}</div></td>
           <td class="py-2.5 px-3 font-mono text-brand-700 font-semibold">${item.code}</td>
           <td class="py-2.5 px-3 text-gray-800">${item.name}</td>
           <td class="py-2.5 px-3 text-gray-500">${item.package}</td>
@@ -270,7 +391,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const cards = document.getElementById('items-cards');
       cards.innerHTML = data.items.map(item =>
         `<div class="bg-gray-50 rounded-xl p-4 flex gap-3">
-          <div class="w-14 h-14 rounded border border-gray-200 flex items-center justify-center overflow-hidden bg-white shrink-0">${item.imageId ? `<img src="${imgBase}${item.imageId}.jpeg" alt="${item.name}" class="w-full h-full object-contain" loading="lazy" onerror="imgError(this)">` : imgFallbackSvg}</div>
           <div class="flex-1 min-w-0">
             <div class="flex items-start justify-between mb-1">
               <span class="text-xs font-mono text-brand-600 font-semibold bg-brand-50 px-2 py-0.5 rounded">Cód. ${item.code}</span>
@@ -286,8 +406,33 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const totalQty = data.items.reduce((sum, item) => sum + item.qty, 0);
       document.getElementById('total-items').textContent = totalQty;
 
-      // Mostrar botão compartilhar se disponível
-      if (navigator.share) {
+      // PDF content
+      document.getElementById('pdf-quote-code').textContent = `Orçamento ${data.quoteCode}`;
+      document.getElementById('pdf-quote-date').textContent = dateStr ? `${dateStr} às ${timeStr}` : '';
+
+      // PDF info grid
+      let infoHtml = `
+        <div class="info-item"><p class="info-label">Cliente</p><p class="info-value">${data.customerName}</p></div>
+        <div class="info-item"><p class="info-label">WhatsApp</p><p class="info-value">${formatWhatsApp(data.whatsapp)}</p></div>
+        <div class="info-item"><p class="info-label">Loja</p><p class="info-value">${data.store}</p></div>`;
+      if (data.city) infoHtml += `<div class="info-item"><p class="info-label">Cidade / Região</p><p class="info-value">${data.city}</p></div>`;
+      if (data.cnpj) infoHtml += `<div class="info-item"><p class="info-label">CNPJ</p><p class="info-value">${data.cnpj}</p></div>`;
+      document.getElementById('pdf-info').innerHTML = infoHtml;
+
+      // PDF tabela
+      document.getElementById('pdf-items-table').innerHTML = data.items.map((item, i) =>
+        `<tr>
+          <td class="td-code">${item.code}</td>
+          <td>${item.name}</td>
+          <td>${item.package}</td>
+          <td class="td-qty">${item.qty}</td>
+        </tr>`
+      ).join('');
+
+      document.getElementById('pdf-total-items').textContent = totalQty;
+
+      // Mostrar compartilhar se suportado (com files)
+      if (navigator.canShare) {
         document.getElementById('share-btn').classList.remove('hidden');
         document.getElementById('share-btn').classList.add('inline-flex');
       }
@@ -295,22 +440,90 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       document.getElementById('order-content').classList.remove('hidden');
     }
 
-    function copyLink() {
-      navigator.clipboard.writeText(window.location.href).then(() => {
-        const btn = document.getElementById('copy-btn-text');
-        btn.textContent = 'Copiado!';
-        setTimeout(() => { btn.textContent = 'Copiar Link'; }, 2000);
-      });
+    function getPDFFilename() {
+      return orderData ? `Orcamento-${orderData.quoteCode}-Milking.pdf` : 'Orcamento-Milking.pdf';
     }
 
-    function shareOrder() {
-      const data = parseHash();
-      if (!data) return;
-      navigator.share({
-        title: `Pedido ${data.quoteCode} — Milking`,
-        text: `Pedido de orçamento ${data.quoteCode} — ${data.items.length} itens`,
-        url: window.location.href
-      }).catch(() => {});
+    async function generatePDFBlob() {
+      const el = document.getElementById('pdf-content');
+      el.style.display = 'block';
+      el.style.width = '210mm';
+
+      const opt = {
+        margin: [8, 0, 8, 0],
+        filename: getPDFFilename(),
+        image: { type: 'jpeg', quality: 0.95 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          letterRendering: true,
+          width: 794 // A4 width at 96dpi
+        },
+        jsPDF: {
+          unit: 'mm',
+          format: 'a4',
+          orientation: 'portrait'
+        },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+      };
+
+      const blob = await html2pdf().set(opt).from(el).outputPdf('blob');
+      el.style.display = 'none';
+      return blob;
+    }
+
+    async function downloadPDF() {
+      const btn = document.getElementById('pdf-btn');
+      const btnText = document.getElementById('pdf-btn-text');
+      btn.disabled = true;
+      btnText.textContent = 'Gerando...';
+
+      try {
+        const blob = await generatePDFBlob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = getPDFFilename();
+        a.click();
+        URL.revokeObjectURL(url);
+      } catch (e) {
+        // Fallback: imprimir
+        window.print();
+      }
+
+      btn.disabled = false;
+      btnText.textContent = 'Baixar PDF';
+    }
+
+    async function sharePDF() {
+      const btn = document.getElementById('share-btn');
+      btn.disabled = true;
+
+      try {
+        const blob = await generatePDFBlob();
+        const file = new File([blob], getPDFFilename(), { type: 'application/pdf' });
+
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            title: `Orçamento ${orderData.quoteCode} — Milking`,
+            files: [file]
+          });
+        } else {
+          // Fallback: download direto
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = getPDFFilename();
+          a.click();
+          URL.revokeObjectURL(url);
+        }
+      } catch (e) {
+        if (e.name !== 'AbortError') {
+          window.print();
+        }
+      }
+
+      btn.disabled = false;
     }
 
     // Init
@@ -324,19 +537,40 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     });
   </script>
 
-  <!-- Google Tag Manager (deferred for performance) -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-M75FTZKF');</script>
-  <!-- Google Analytics (GA4) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8D35L811FS"></script>
+  <!-- GTM + GA4 — adiados -->
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-8D35L811FS');
+    function loadTracking() {
+      dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+      var g = document.createElement('script');
+      g.async = true;
+      g.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-M75FTZKF';
+      document.head.appendChild(g);
+      gtag('js', new Date());
+      gtag('config', 'G-8D35L811FS');
+      var a = document.createElement('script');
+      a.async = true;
+      a.src = 'https://www.googletagmanager.com/gtag/js?id=G-8D35L811FS';
+      document.head.appendChild(a);
+    }
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(loadTracking);
+    } else {
+      setTimeout(loadTracking, 3000);
+    }
+  </script>
+
+  <!-- Hotjar Tracking Code for Milking Liners -->
+  <script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:6686442,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
   </script>
 
 </body>

@@ -54,8 +54,51 @@
     .cart-pop { animation: cartPop 0.3s cubic-bezier(.22,1,.36,1); }
 
     @media (prefers-reduced-motion: reduce) {
-      .card-product, .fade-in, .cart-pop { animation: none !important; transition: none !important; }
+      .card-product, .fade-in, .cart-pop, .card-bestseller { animation: none !important; transition: none !important; }
     }
+
+    .card-bestseller {
+      width: 72vw;
+      flex-shrink: 0;
+      transition: transform 0.2s cubic-bezier(.22,1,.36,1), box-shadow 0.2s cubic-bezier(.22,1,.36,1);
+    }
+    .card-bestseller:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px -8px rgba(6,59,91,0.12);
+    }
+    @media (min-width: 640px) { .card-bestseller { width: 44vw; } }
+    @media (min-width: 1024px) { .card-bestseller { width: calc(25% - 12px); } }
+    .best-sellers-scroll {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+    }
+    .best-sellers-scroll::-webkit-scrollbar { display: none; }
+    .snap-start { scroll-snap-align: start; }
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .cat-tag { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: .25rem; }
+    .bs-img { padding: 1.25rem; }
+    .carousel-arrow {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: #fff;
+      border: 1px solid #dde4ed;
+      box-shadow: 0 2px 8px rgba(6,59,91,0.1);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: opacity 0.2s, box-shadow 0.2s, transform 0.15s;
+      color: #084a7a;
+    }
+    .carousel-arrow:hover { box-shadow: 0 4px 14px rgba(6,59,91,0.16); transform: scale(1.08); }
+    .carousel-arrow:active { transform: scale(0.95); }
+    .carousel-arrow:disabled { opacity: 0; pointer-events: none; }
+    .carousel-fade { transition: opacity 0.2s; pointer-events: none; }
   </style>
 
   <!-- Structured Data: Organization -->
@@ -205,6 +248,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         </div>
         <p class="text-center text-[10px] text-gray-400 pb-2 -mt-1">*Consultar disponibilidade de estoque</p>
+      </section>
+
+      <!-- ========== MAIS PEDIDOS ========== -->
+      <section id="best-sellers" aria-labelledby="best-sellers-title" class="bg-surface-50 border-b border-surface-200 py-6 sm:py-10">
+        <div class="max-w-5xl mx-auto px-4">
+          <div class="flex items-center justify-between mb-4">
+            <h2 id="best-sellers-title" class="text-lg font-extrabold text-gray-900">Mais pedidos</h2>
+            <div class="flex items-center gap-2">
+              <button id="bs-prev" class="carousel-arrow" aria-label="Anterior" onclick="scrollBestSellers(-1)" disabled>
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3 5 8l5 5"/></svg>
+              </button>
+              <button id="bs-next" class="carousel-arrow" aria-label="Próximo" onclick="scrollBestSellers(1)">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3l5 5-5 5"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="relative">
+            <div id="best-sellers-grid" class="best-sellers-scroll flex gap-4 overflow-x-auto" style="margin:0 -1rem;padding:0 1rem">
+            </div>
+            <div id="bs-fade-left" class="carousel-fade absolute left-0 top-0 bottom-0 w-8" style="background:linear-gradient(to right,#f7f9fc,transparent);opacity:0;margin-left:-1rem"></div>
+            <div id="bs-fade-right" class="carousel-fade absolute right-0 top-0 bottom-0 w-8" style="background:linear-gradient(to left,#f7f9fc,transparent);margin-right:-1rem"></div>
+          </div>
+        </div>
       </section>
 
       <!-- ========== CATÁLOGO ========== -->
@@ -483,6 +549,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           Falar com vendedor
         </a>
+        <a id="success-order-link" href="#" target="_blank" class="inline-flex items-center justify-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold px-6 py-3 rounded-lg transition-colors w-full mb-3">
+          <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Ver Pedido / Baixar PDF
+        </a>
 <button onclick="startNewQuote()" class="text-brand-600 font-medium text-sm hover:underline">
           Fazer novo orçamento
         </button>
@@ -627,6 +697,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const value = encodeURIComponent(JSON.stringify(cart));
       document.cookie = `${COOKIE_NAME}=${value}; expires=${expires}; path=/; SameSite=Lax`;
       updateCartUI();
+      renderBestSellers();
     }
 
     function loadCart() {
@@ -1118,6 +1189,102 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         const searchMatch = matchesSearch(p, searchTerm);
         return catMatch && brandMatch && searchMatch;
       });
+    }
+
+    // ==============================
+    // MAIS VENDIDOS
+    // ==============================
+    const SHORT_CATEGORY = {
+      'HIGIENIZAÇÃO INDUSTRIAL': 'Higienização',
+      'PRÉ-DIPPING': 'Pré-Dipping',
+      'PÓS-DIPPING': 'Pós-Dipping',
+      'TETEIRAS MILKING LINERS': 'Teteiras',
+      'TETEIRAS DE SILICONE': 'Teteiras',
+      'FILTROS DE LEITE': 'Filtros',
+      'PEÇAS DE REPOSIÇÃO PARA PULSADOR': 'Pulsadores',
+      'PALHETAS E ROTORES': 'Palhetas',
+    };
+
+    function renderBestSellers() {
+      const container = document.getElementById('best-sellers-grid');
+      if (!container) return;
+
+      const products = BEST_SELLERS
+        .map(code => PRODUCT_MAP.get(code))
+        .filter(Boolean);
+
+      if (products.length === 0) {
+        const section = document.getElementById('best-sellers');
+        if (section) section.style.display = 'none';
+        return;
+      }
+
+      const scrollLeft = container.scrollLeft;
+
+      container.innerHTML = products.map(p => {
+        const inCart = cart.find(c => c.code === p.code);
+        const imgSrc = p.image || (p.id ? IMG_BASE + p.id + '.jpeg' : '');
+        const shortCat = SHORT_CATEGORY[p.category] || p.category;
+        return `
+          <div class="card-bestseller snap-start
+                      bg-white rounded-xl border border-surface-200 shadow-sm overflow-hidden flex flex-col">
+            <div class="bg-gradient-to-b from-surface-50 to-surface-100 aspect-square flex items-center justify-center overflow-hidden bs-img">
+              <img src="${imgSrc}" alt="${p.name}"
+                   class="w-full h-full object-contain mix-blend-multiply"
+                   loading="eager" decoding="async"
+                   sizes="(min-width:1024px) 220px, (min-width:640px) 44vw, 72vw"
+                   width="200" height="200"
+                   onerror="imgError(this)">
+            </div>
+            <div class="p-3 flex flex-col flex-1">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="cat-tag text-brand-700 bg-brand-50">${shortCat}</span>
+                <span class="text-[11px] text-gray-400 font-medium">Cód. ${p.code}</span>
+              </div>
+              <h3 class="text-sm font-bold text-gray-900 leading-snug mb-1 line-clamp-2">${p.name}</h3>
+              <span class="text-xs text-gray-500 mb-3">${p.brand} · ${p.package}</span>
+              <div class="mt-auto">
+                ${inCart
+                  ? `<div class="flex items-center justify-between bg-brand-50 rounded-xl px-2 py-1.5 fade-in">
+                      <button onclick="updateQty('${p.code}', -1)" class="w-10 h-10 flex items-center justify-center text-brand-700 font-bold text-lg rounded-lg hover:bg-brand-100 transition-colors" aria-label="Diminuir quantidade">−</button>
+                      <span class="text-sm font-bold text-brand-800">${inCart.qty}</span>
+                      <button onclick="updateQty('${p.code}', 1)" class="w-10 h-10 flex items-center justify-center text-brand-700 font-bold text-lg rounded-lg hover:bg-brand-100 transition-colors" aria-label="Aumentar quantidade">+</button>
+                    </div>`
+                  : `<button onclick="addToCart('${p.code}')" class="w-full bg-brand-600 text-white text-sm font-semibold py-2.5 rounded-xl hover:bg-brand-700 active:scale-[0.98] transition-all">Adicionar</button>`
+                }
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+
+      container.scrollLeft = scrollLeft;
+      updateCarouselState();
+      if (!container._scrollBound) {
+        container.addEventListener('scroll', updateCarouselState, { passive: true });
+        container._scrollBound = true;
+      }
+    }
+
+    function scrollBestSellers(direction) {
+      const container = document.getElementById('best-sellers-grid');
+      if (!container || !container.children.length) return;
+      const cardWidth = container.children[0].offsetWidth + 16;
+      container.scrollBy({ left: direction * cardWidth, behavior: 'smooth' });
+    }
+
+    function updateCarouselState() {
+      const container = document.getElementById('best-sellers-grid');
+      if (!container) return;
+      const prev = document.getElementById('bs-prev');
+      const next = document.getElementById('bs-next');
+      const fadeL = document.getElementById('bs-fade-left');
+      const fadeR = document.getElementById('bs-fade-right');
+      const atStart = container.scrollLeft < 8;
+      const atEnd = container.scrollLeft + container.clientWidth >= container.scrollWidth - 8;
+      if (prev) prev.disabled = atStart;
+      if (next) next.disabled = atEnd;
+      if (fadeL) fadeL.style.opacity = atStart ? '0' : '1';
+      if (fadeR) fadeR.style.opacity = atEnd ? '0' : '1';
     }
 
     function renderProducts() {
@@ -1646,6 +1813,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       document.getElementById('success-quote-code').textContent = quoteCode;
       const whatsappMsg = encodeURIComponent(`Olá, quero dar andamento no orçamento número ${quoteCode}.`);
       document.getElementById('success-whatsapp-link').href = `https://wa.me/${WHATSAPP_NUMBER}?text=${whatsappMsg}`;
+      document.getElementById('success-order-link').href = orderUrl;
 
       // Mostrar sucesso
       btn.disabled = false;
@@ -1733,6 +1901,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     function init() {
       applyFilterFromHash();
       renderCategorySelect();
+      renderBestSellers();
       renderProducts();
       updateCartUI();
       updateActiveFilters();
@@ -1768,6 +1937,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     } else {
       setTimeout(loadTracking, 3000);
     }
+  </script>
+
+  <!-- Hotjar Tracking Code for Milking Liners -->
+  <script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:6686442,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
   </script>
 
   <!-- Botão voltar ao topo -->
