@@ -29,38 +29,7 @@
   <!-- Favicon -->
   <link rel="icon" href="Logo-milking-liners.svg" type="image/svg+xml">
 
-  <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-M75FTZKF');</script>
-  <!-- End Google Tag Manager -->
-  <!-- Google Analytics (GA4) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8D35L811FS"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-8D35L811FS');
-  </script>
-  <!-- End Google Analytics -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brand: { 50: '#e8f2fb', 100: '#c5dff3', 500: '#2a88cc', 600: '#0d71b9', 700: '#0a5e9a', 800: '#084a7a', 900: '#063b5b' },
-            surface: { 50: '#f7f9fc', 100: '#eef2f7', 200: '#dde4ed', 300: '#c4cfdc' },
-          },
-          borderRadius: {
-            DEFAULT: '0.625rem',
-          }
-        }
-      }
-    }
-  </script>
+  <link rel="stylesheet" href="styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
@@ -160,7 +129,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <!-- ========== HERO SECTION ========== -->
       <section class="relative bg-brand-900 text-white overflow-hidden">
         <div class="absolute inset-0">
-          <img src="assets/Background-hero.webp" alt="" class="w-full h-full object-cover" loading="eager">
+          <img src="assets/Background-hero.webp" alt="" class="w-full h-full object-cover" loading="eager" width="3546" height="1322" fetchpriority="high">
           <div class="absolute inset-0 bg-brand-900/70"></div>
         </div>
         <div class="relative max-w-5xl mx-auto px-4 py-12 sm:py-16 lg:py-20">
@@ -361,7 +330,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
 
       <!-- CTA Float: Meu Orçamento -->
-      <button id="fab-cart" onclick="showScreen('cart')" class="hidden fixed bottom-5 right-5 z-40 bg-brand-600 text-white rounded-xl shadow-xl shadow-brand-600/25 items-center gap-2.5 px-5 py-3 hover:bg-brand-700 active:scale-[0.97] transition-all">
+      <button id="fab-cart" onclick="showScreen('cart')" class="hidden fixed bottom-5 right-5 z-40 bg-brand-900 text-white rounded-xl shadow-xl shadow-brand-900/25 items-center gap-2.5 px-5 py-3 hover:bg-brand-800 active:scale-[0.97] transition-all">
         <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
         <span class="text-sm font-bold">Meu Orçamento</span>
         <span id="fab-badge" class="bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
@@ -1514,6 +1483,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
 
     init();
+  </script>
+
+  <!-- Google Tag Manager (deferred for performance) -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-M75FTZKF');</script>
+  <!-- Google Analytics (GA4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8D35L811FS"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-8D35L811FS');
   </script>
 
 </body>

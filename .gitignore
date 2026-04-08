@@ -6,3 +6,8 @@ n8n-workflow.json
 milking_products.json
 qrcode_whatsapp.png
 node_modules/
+dist/
+src/
+package.json
+package-lock.json
+tailwind.config.js

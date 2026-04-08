@@ -28,35 +28,7 @@
 
   <!-- Favicon -->
   <link rel="icon" href="Logo-milking-liners.svg" type="image/svg+xml">
-  <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-M75FTZKF');</script>
-  <!-- End Google Tag Manager -->
-  <!-- Google Analytics (GA4) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8D35L811FS"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-8D35L811FS');
-  </script>
-  <!-- End Google Analytics -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brand: { 50: '#e8f2fb', 100: '#c5dff3', 500: '#2a88cc', 600: '#0d71b9', 700: '#0a5e9a', 800: '#084a7a', 900: '#063b5b' },
-            surface: { 50: '#f7f9fc', 100: '#eef2f7', 200: '#dde4ed', 300: '#c4cfdc' }
-          }
-        }
-      }
-    }
-  </script>
+  <link rel="stylesheet" href="styles.css">
   <style>
     .fade-in { animation: fadeIn 0.2s ease-in; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
@@ -350,6 +322,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         document.getElementById('error-content').classList.remove('hidden');
       }
     });
+  </script>
+
+  <!-- Google Tag Manager (deferred for performance) -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-M75FTZKF');</script>
+  <!-- Google Analytics (GA4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8D35L811FS"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-8D35L811FS');
   </script>
 
 </body>
