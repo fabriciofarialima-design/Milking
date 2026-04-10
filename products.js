@@ -1,4 +1,4 @@
-const PRODUCTS = [
+let PRODUCTS = [
   {id:"136767",code:"112",name:"ASSENTO DO PULSADOR - CACHIMBO",brand:"Peças Compatíveis a Diversas Marcas",category:"ABRAÇADEIRAS E ADAPTADORES PARA PULSADOR",package:"UN/1",reference:"T0001-5",barcode:"SEM GTIN",aliases:[]},
   {id:"136780",code:"125",name:"ABRAÇADEIRA PARA PULSADOR 50 X 3/4 (Regulador mola)",brand:"Peças Compatíveis a Diversas Marcas",category:"ABRAÇADEIRAS E ADAPTADORES PARA PULSADOR",package:"UN/1",reference:"LT-PP-ABCO-50-034",barcode:"SEM GTIN",aliases:[]},
   {id:"136853",code:"151",name:"ABRAÇADEIRA PARA PULSADOR 50 X 1\"",brand:"Peças Compatíveis a Diversas Marcas",category:"ABRAÇADEIRAS E ADAPTADORES PARA PULSADOR",package:"UN/1",reference:"90002000031",barcode:"SEM GTIN",aliases:[]},
@@ -883,15 +883,19 @@ const PRODUCTS = [
   {id:"",code:"1318",name:"CASCO TOP - 1BB X 20L",brand:"Launer",category:"HIGIENIZAÇÃO INDUSTRIAL",package:"BB",reference:"",barcode:"",aliases:["casco top","casco","tratamento casco"]}
 ];
 
+// Marcas temporariamente ocultas do site
+const HIDDEN_BRANDS = ["Launer"];
+PRODUCTS = PRODUCTS.filter(p => !HIDDEN_BRANDS.includes(p.brand));
+
 const BEST_SELLERS = [
-  "17",   // TETEIRA MILKING WEST FASTFLOW C/4 - Teteiras
-  "1275", // ALCALAN TOP 5L - Higienização Industrial
-  "13",   // FILTRO TNT 470 X 58 C/100 - Filtros
-  "1287", // BIO MASTY 5.000 5L - Pós-Dipping
-  "18",   // TETEIRA MILKING HARMONY PREMIUM C/4 - Teteiras
-  "1298", // STAR MASTY 5L - Pré-Dipping
-  "110",  // ANEL VEDAÇÃO COLETOR 450CC - Anéis
-  "1278", // ACIDO CLEAN 5L - Higienização Industrial
-  "120",  // FILTRO TNT 750 X 75 C/100 - Filtros
-  "1284"  // BIO MASTY ESPUMA 5L - Pré-Dipping
+  "17",   // TETEIRA MILKING WEST FASTFLOW C/4
+  "18",   // TETEIRA MILKING HARMONY PREMIUM C/4
+  "13",   // FILTRO TNT 470 X 58 C/100
+  "120",  // FILTRO TNT 750 X 75 C/100
+  "110",  // ANEL VEDAÇÃO COLETOR 450CC
+  "44",   // PULSADOR MECÂNICO INTERPULS L02 AIR
+  "12",   // MANGUEIRA CURTA DO VÁCUO UNIVERSAL C/4
+  "8",    // MANGUEIRA CURTA DO LEITE 10mm C/4
+  "19",   // ESCOVA CILÍNDRICA CURTA
+  "753"   // ÓLEO ORDENHADEIRA VRLUB LITRO
 ];
