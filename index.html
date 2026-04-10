@@ -751,7 +751,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       if (footer) footer.style.display = (name === 'catalog' || name === 'success') ? '' : 'none';
 
       if (name === 'cart') renderCart();
-      if (name === 'form') { summaryExpanded = false; renderFormSummary(); }
+      if (name === 'form') { summaryExpanded = false; renderFormSummary(); restoreFormData(); }
     }
 
     // ==============================
@@ -815,6 +815,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         window.scrollTo(0, 0);
         summaryExpanded = false;
         renderFormSummary();
+        restoreFormData();
       }, 150);
     }
 
@@ -1755,6 +1756,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       return digits[13] === d2;
     }
 
+    function saveFormData() {
+      try {
+        localStorage.setItem('milking_form', JSON.stringify({
+          store: document.getElementById('form-store').value.trim(),
+          whatsapp: document.getElementById('form-whatsapp').value.trim(),
+          cnpj: document.getElementById('form-cnpj').value.trim()
+        }));
+      } catch (e) {}
+    }
+
+    function restoreFormData() {
+      try {
+        const data = JSON.parse(localStorage.getItem('milking_form'));
+        if (!data) return;
+        const storeEl = document.getElementById('form-store');
+        const whatsEl = document.getElementById('form-whatsapp');
+        const cnpjEl = document.getElementById('form-cnpj');
+        if (data.store && !storeEl.value) storeEl.value = data.store;
+        if (data.whatsapp && !whatsEl.value) whatsEl.value = data.whatsapp;
+        if (data.cnpj && !cnpjEl.value) cnpjEl.value = data.cnpj;
+      } catch (e) {}
+    }
+
     async function submitQuote(event) {
       event.preventDefault();
       hideFormError();
@@ -1827,6 +1851,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       } catch (err) {
         // Silencioso em produção — webhook failure não deve bloquear UX
       }
+
+      // Salvar dados do formulário para próxima cotação
+      saveFormData();
 
       // Limpar carrinho
       cart = [];
