@@ -1,4 +1,4 @@
-let PRODUCTS = [
+const PRODUCTS = [
   {id:"136767",code:"112",name:"ASSENTO DO PULSADOR - CACHIMBO",brand:"Peças Compatíveis a Diversas Marcas",category:"ABRAÇADEIRAS E ADAPTADORES PARA PULSADOR",package:"UN/1",reference:"T0001-5",barcode:"SEM GTIN",aliases:[]},
   {id:"136780",code:"125",name:"ABRAÇADEIRA PARA PULSADOR 50 X 3/4 (Regulador mola)",brand:"Peças Compatíveis a Diversas Marcas",category:"ABRAÇADEIRAS E ADAPTADORES PARA PULSADOR",package:"UN/1",reference:"LT-PP-ABCO-50-034",barcode:"SEM GTIN",aliases:[]},
   {id:"136853",code:"151",name:"ABRAÇADEIRA PARA PULSADOR 50 X 1\"",brand:"Peças Compatíveis a Diversas Marcas",category:"ABRAÇADEIRAS E ADAPTADORES PARA PULSADOR",package:"UN/1",reference:"90002000031",barcode:"SEM GTIN",aliases:[]},
@@ -882,10 +882,6 @@ let PRODUCTS = [
   {id:"",code:"1317",name:"PEROXONI P - 1BB X 50L",brand:"Launer",category:"HIGIENIZAÇÃO INDUSTRIAL",package:"BB",reference:"",barcode:"",aliases:["peroxoni","sanitizante","desinfetante"]},
   {id:"",code:"1318",name:"CASCO TOP - 1BB X 20L",brand:"Launer",category:"HIGIENIZAÇÃO INDUSTRIAL",package:"BB",reference:"",barcode:"",aliases:["casco top","casco","tratamento casco"]}
 ];
-
-// Marcas temporariamente ocultas do site
-const HIDDEN_BRANDS = ["Launer"];
-PRODUCTS = PRODUCTS.filter(p => !HIDDEN_BRANDS.includes(p.brand));
 
 const BEST_SELLERS = [
   "17",   // TETEIRA MILKING WEST FASTFLOW C/4
