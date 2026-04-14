@@ -12,6 +12,7 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let allData = [];
 let filteredData = [];
 let currentSort = { key: 'count', dir: 'desc' };
+let activeCard = 'all';
 
 // ==============================
 // ELEMENTOS
@@ -88,6 +89,10 @@ async function showDashboard() {
   $noResults.classList.add('hidden');
   $loading.classList.remove('hidden');
 
+  // Skeleton loading for cards
+  [$totalQuotes, $totalCnpjs, $last7days].forEach(el => { el.innerHTML = '<span class="skeleton"></span>'; });
+  ['trend-quotes', 'trend-cnpjs', 'trend-7days'].forEach(id => { const el = $(id); if (el) el.classList.add('hidden'); });
+
   const { data, error } = await sb.from('quotes')
     .select('cnpj, customer_name, city, whatsapp, created_at, quote_code, item_count, items, order_url')
     .order('created_at', { ascending: false });
@@ -108,6 +113,7 @@ async function showDashboard() {
     $totalQuotes.textContent = '0';
     $totalCnpjs.textContent = '0';
     $last7days.textContent = '0';
+    ['trend-quotes', 'trend-cnpjs', 'trend-7days'].forEach(id => { const el = $(id); if (el) el.classList.add('hidden'); });
     $emptyState.classList.remove('hidden');
     return;
   }
@@ -140,15 +146,20 @@ function applyFilters() {
     data = data.filter(q => new Date(q.created_at) >= cutoff);
   }
 
-  // Filter by search
+  // Filter by search (CNPJ, revenda, cidade, produto)
   if (search) {
     data = data.filter(q => {
       const cnpjClean = (q.cnpj || '').replace(/\D/g, '');
       const cnpjFormatted = formatCNPJ(q.cnpj || '');
+      const itemsMatch = Array.isArray(q.items) && q.items.some(i =>
+        (i.name || '').toLowerCase().includes(search) ||
+        (i.code || '').toLowerCase().includes(search)
+      );
       return cnpjClean.includes(search.replace(/\D/g, '')) ||
         cnpjFormatted.toLowerCase().includes(search) ||
         (q.customer_name || '').toLowerCase().includes(search) ||
-        (q.city || '').toLowerCase().includes(search);
+        (q.city || '').toLowerCase().includes(search) ||
+        itemsMatch;
     });
   }
 
@@ -185,10 +196,97 @@ function renderStats(all, filtered) {
   const uniqueCnpjs = new Set(filtered.map(q => q.cnpj));
   $totalCnpjs.textContent = uniqueCnpjs.size;
 
-  const sevenDaysAgo = new Date();
-  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-  const recent = filtered.filter(q => new Date(q.created_at) >= sevenDaysAgo);
-  $last7days.textContent = recent.length;
+  const now = new Date();
+  const sevenDaysAgo = new Date(now);
+  sevenDaysAgo.setDate(now.getDate() - 7);
+  const fourteenDaysAgo = new Date(now);
+  fourteenDaysAgo.setDate(now.getDate() - 14);
+
+  const thisWeek = filtered.filter(q => new Date(q.created_at) >= sevenDaysAgo);
+  const lastWeek = filtered.filter(q => {
+    const d = new Date(q.created_at);
+    return d >= fourteenDaysAgo && d < sevenDaysAgo;
+  });
+
+  $last7days.textContent = thisWeek.length;
+
+  // Trend: quotes this week vs last week
+  renderTrend('trend-7days', thisWeek.length, lastWeek.length);
+
+  // Trend: unique CNPJs this week vs last week
+  const cnpjsThisWeek = new Set(thisWeek.map(q => q.cnpj)).size;
+  const cnpjsLastWeek = new Set(lastWeek.map(q => q.cnpj)).size;
+  renderTrend('trend-cnpjs', cnpjsThisWeek, cnpjsLastWeek);
+
+  // Trend: total quotes (split filtered period in half for comparison)
+  if (filtered.length > 0) {
+    const oldest = new Date(filtered[filtered.length - 1].created_at).getTime();
+    const newest = now.getTime();
+    const midpoint = new Date(oldest + (newest - oldest) / 2);
+    const recentHalf = filtered.filter(q => new Date(q.created_at) >= midpoint).length;
+    const olderHalf = filtered.filter(q => new Date(q.created_at) < midpoint).length;
+    renderTrend('trend-quotes', recentHalf, olderHalf);
+  }
+}
+
+function renderTrend(id, current, previous) {
+  const el = $(id);
+  if (!el) return;
+  if (previous === 0 && current === 0) { el.classList.add('hidden'); return; }
+
+  let pct, label;
+  if (previous === 0) {
+    label = '+' + current;
+    el.className = 'text-[11px] font-semibold text-emerald-600';
+  } else {
+    pct = Math.round(((current - previous) / previous) * 100);
+    if (pct === 0) { el.classList.add('hidden'); return; }
+    const sign = pct > 0 ? '+' : '';
+    label = sign + pct + '%';
+    el.className = pct > 0
+      ? 'text-[11px] font-semibold text-emerald-600'
+      : 'text-[11px] font-semibold text-red-500';
+  }
+
+  const arrow = (current >= previous)
+    ? '<svg class="w-3 h-3 inline -mt-px" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>'
+    : '<svg class="w-3 h-3 inline -mt-px" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>';
+
+  el.innerHTML = arrow + ' ' + label;
+  el.classList.remove('hidden');
+  el.title = current >= previous
+    ? 'vs. período anterior: ' + previous + ' → ' + current
+    : 'vs. período anterior: ' + previous + ' → ' + current;
+}
+
+// ==============================
+// CARD FILTER
+// ==============================
+function filterByCard(card) {
+  activeCard = card;
+
+  // Update active card styles
+  document.querySelectorAll('.stat-card').forEach(el => el.classList.remove('stat-card-active'));
+  const active = $('card-' + card);
+  if (active) active.classList.add('stat-card-active');
+
+  // Apply filter based on card
+  if (card === '7days') {
+    $periodFilter.value = '7';
+  } else {
+    if ($periodFilter.value === '7' && card !== '7days') {
+      $periodFilter.value = '30';
+    }
+  }
+
+  applyFilters();
+
+  // Scroll to relevant section
+  if (card === 'cnpjs') {
+    $sectionCnpj?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else {
+    $sectionRecent?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 }
 
 // ==============================
