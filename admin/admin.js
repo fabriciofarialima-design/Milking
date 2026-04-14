@@ -63,7 +63,7 @@ async function showDashboard() {
   $loading.classList.remove('hidden');
 
   const { data, error } = await sb.from('quotes')
-    .select('cnpj, customer_name, city, whatsapp, created_at, quote_code, item_count, items')
+    .select('cnpj, customer_name, city, whatsapp, created_at, quote_code, item_count, items, order_url')
     .order('created_at', { ascending: false });
 
   $loading.classList.add('hidden');
@@ -141,7 +141,7 @@ function renderCnpjTable(data) {
           <tbody>
             ${g.quotes.map(q => `
               <tr class="border-t border-gray-100">
-                <td class="py-1 px-2"><a href="../pedido.html#code=${q.quote_code}" target="_blank" class="text-brand-600 hover:underline">${esc(q.quote_code)}</a></td>
+                <td class="py-1 px-2"><a href="${q.order_url || '#'}" target="_blank" class="text-brand-600 hover:underline">${esc(q.quote_code)}</a></td>
                 <td class="py-1 px-2">${formatDate(q.created_at)}</td>
                 <td class="py-1 px-2">${Array.isArray(q.items) ? q.items.length : '-'} produtos</td>
                 <td class="py-1 px-2">${q.item_count} un</td>
@@ -167,7 +167,7 @@ function renderRecentTable(data) {
   $recentTable.innerHTML = recent.map(q => `
     <tr class="border-b border-gray-100 hover:bg-gray-50">
       <td class="px-4 py-3 text-sm">
-        <a href="../pedido.html#code=${q.quote_code}" target="_blank" class="text-brand-600 hover:underline font-medium">${esc(q.quote_code)}</a>
+        <a href="${q.order_url || '#'}" target="_blank" class="text-brand-600 hover:underline font-medium">${esc(q.quote_code)}</a>
       </td>
       <td class="px-4 py-3 font-mono text-sm">${formatCNPJ(q.cnpj)}</td>
       <td class="px-4 py-3 text-sm">${esc(q.customer_name)}</td>
