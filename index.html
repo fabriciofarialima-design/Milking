@@ -139,6 +139,9 @@
     "inLanguage": "pt-BR"
   }
   </script>
+
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 </head>
 <body class="bg-surface-50 min-h-screen">
 <!-- Google Tag Manager (noscript) -->
@@ -518,8 +521,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <input type="tel" id="form-whatsapp" required class="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 outline-none transition-all" placeholder="(00) 00000-0000" oninput="maskWhatsApp(this)">
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">CNPJ</label>
-            <input type="text" id="form-cnpj" class="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 outline-none transition-all" placeholder="00.000.000/0000-00" oninput="maskCNPJ(this)" maxlength="18">
+            <label class="block text-sm font-medium text-gray-700 mb-1">CNPJ *</label>
+            <input type="text" id="form-cnpj" required class="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 outline-none transition-all" placeholder="00.000.000/0000-00" oninput="maskCNPJ(this)" maxlength="18">
           </div>
         </div>
 
@@ -656,6 +659,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     const WEBHOOK_URL = "https://n8n-production-46a60.up.railway.app/webhook/milking-orcamento";
     const SITE_URL = "https://fabriciofarialima-design.github.io/Milking";
     const WHATSAPP_NUMBER = "5534998991588";
+
+    // Supabase
+    const SUPABASE_URL = "https://dyjmkkyqjcvixcnoeqjl.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_eBvpDB74nbJnlRvXI9Il2Q_9FFWL0cj";
+    let _sb = null;
+    function getSb() {
+      if (!_sb && typeof supabase !== 'undefined') _sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      return _sb;
+    }
     const COOKIE_NAME = "milking_cart";
     const COOKIE_DAYS = 30;
     const IMG_BASE = "https://pedidook.s3-sa-east-1.amazonaws.com/656/produto/foto_";
@@ -1798,7 +1810,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         return;
       }
 
-      if (cnpj && !validarCNPJ(cnpj)) {
+      if (!cnpj) {
+        showFormError('Preencha o CNPJ da revenda.');
+        return;
+      }
+
+      if (!validarCNPJ(cnpj)) {
         showFormError('CNPJ inválido. Verifique os números digitados.');
         return;
       }
@@ -1840,17 +1857,36 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       btn.disabled = true;
       btn.innerHTML = `<svg aria-hidden="true" class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg> Enviando...`;
 
-      try {
-        if (WEBHOOK_URL) {
-          await fetch(WEBHOOK_URL, {
+      const promises = [];
+
+      if (WEBHOOK_URL) {
+        promises.push(
+          fetch(WEBHOOK_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
-          });
-        }
-      } catch (err) {
-        // Silencioso em produção — webhook failure não deve bloquear UX
+          }).catch(err => console.warn('Webhook error:', err))
+        );
       }
+
+      if (getSb()) {
+        promises.push(
+          getSb().from('quotes').insert({
+            quote_code: quoteCode,
+            cnpj: cnpj.replace(/\D/g, ''),
+            customer_name: store,
+            whatsapp: `55${whatsapp}`,
+            city: city,
+            store_type: storeType,
+            items: cart.map(item => ({ code: item.code, name: item.name, qty: item.qty, package: item.package, reference: item.reference })),
+            item_count: cart.reduce((sum, item) => sum + item.qty, 0),
+            notes: notes,
+            order_url: orderUrl
+          }).then(({ error }) => { if (error) console.warn('Supabase error:', error); })
+        );
+      }
+
+      await Promise.allSettled(promises);
 
       // Salvar dados do formulário para próxima cotação
       saveFormData();
